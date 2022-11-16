@@ -3,8 +3,9 @@
 <html lang="en">
 <head>
   <title>Kotlin Journal</title>
+  <link rel="stylesheet" href="/static/bulma.min.css">
 </head>
-<body style="text-align: center; font-family: sans-serif">
+<body>
 <h1>Kotlin Ktor Journal </h1>
 <p><i>Powered by Ktor & Freemarker!</i></p>
 <hr>
