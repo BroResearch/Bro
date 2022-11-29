@@ -25,15 +25,16 @@ class DAOarticleImpl: DAOarticle {
             .singleOrNull()
     }
 
-    override suspend fun addNewArticle(title: String, body: String): Article? = dbQuery {
+    override suspend fun addNewArticle(title: String, body: String, image: ByteArray): Article? = dbQuery {
         val insertStatement = Articles.insert {
             it[Articles.title] = title
             it[Articles.body] = body
+            it[Articles.image] = image
         }
         insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToArticle)
     }
 
-    override suspend fun editArticle(id: Int, title: String, body: String): Boolean = dbQuery {
+    override suspend fun editArticle(id: Int, title: String, body: String, image: ByteArray): Boolean = dbQuery {
         Articles.update({ Articles.id eq id }) {
             it[Articles.title] = title
             it[Articles.body] = body
