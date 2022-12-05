@@ -12,4 +12,5 @@ object Kweets : Table() {
     val date = datetime("date")
     val replyTo = integer("reply_to").index().nullable()
     val text = varchar("text", 1024)
+    val image = varchar("image", 1024).nullable()
 }

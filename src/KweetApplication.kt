@@ -42,6 +42,10 @@ class Index()
 class PostNew()
 
 @Serializable
+@Resource("/uploads/{name}")
+class GetImage(val name: String)
+
+@Serializable
 @Resource("/kweet/{id}/delete")
 class KweetDelete(val id: Int)
 
@@ -168,6 +172,7 @@ fun Application.mainWithDependencies(dao: DAOFacade) {
         styles()
         index(dao)
         postNew(dao, hashFunction)
+        getImage(dao, hashFunction)
         delete(dao, hashFunction)
         userPage(dao)
         viewKweet(dao, hashFunction)

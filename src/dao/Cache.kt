@@ -64,9 +64,9 @@ class DAOFacadeCache(val delegate: DAOFacade, val storagePath: File) : DAOFacade
         return delegate.countReplies(id)
     }
 
-    override fun createKweet(user: String, text: String, replyTo: Int?, date: DateTime): Int {
-        val id = delegate.createKweet(user, text, replyTo)
-        val kweet = Kweet(id, user, text, date, replyTo)
+    override fun createKweet(user: String, text: String, replyTo: Int?, image: String?, date: DateTime): Int {
+        val id = delegate.createKweet(user, text, replyTo, image)
+        val kweet = Kweet(id, user, text, date, replyTo, image)
         kweetsCache.put(id, kweet)
         return id
     }

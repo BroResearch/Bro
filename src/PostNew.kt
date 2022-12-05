@@ -1,6 +1,7 @@
 package io.ktor.samples.kweet
 
 import io.ktor.http.*
+import io.ktor.http.content.*
 import io.ktor.samples.kweet.dao.*
 import io.ktor.server.application.*
 import io.ktor.server.freemarker.*
@@ -10,6 +11,7 @@ import io.ktor.server.resources.post
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
+import java.io.File
 
 /**
  * Register routes for the [PostNew] route '/post-new'
@@ -47,15 +49,38 @@ fun Route.postNew(dao: DAOFacade, hashFunction: (String) -> String) {
     post<PostNew> {
         val user = call.sessions.get<KweetSession>()?.let { dao.user(it.userId) }
 
-        val post = call.receive<Parameters>()
-        val date = post["date"]?.toLongOrNull() ?: return@post call.redirect(it)
-        val code = post["code"] ?: return@post call.redirect(it)
-        val text = post["text"] ?: return@post call.redirect(it)
+        val date = ""
+        val code = ""
+        var text = ""
+        var image = ""
+
+        val multiPartData = call.receive<MultiPartData>()
+
+        multiPartData.forEachPart {part ->
+            when(part) {
+                is PartData.FormItem -> {
+                    when(part.name){
+                        "post-text" -> text = part.value
+                        "date" -> date = part.value
+                        "code" -> code = part.value
+                    }
+                }
+                is PartData.FileItem -> {
+                    image = part.originalFileName as String
+                    val fileBytes = part.streamProvider().readBytes()
+
+                    File("uploads/$image").writeBytes(fileBytes)
+                }
+                else -> {}
+            }
+            part.dispose()
+
+        }
 
         if (user == null || !call.verifyCode(date, user, code, hashFunction)) {
             call.redirect(Login())
         } else {
-            val id = dao.createKweet(user.userId, text, null)
+            val id = dao.createKweet(user.userId, text, null, image)
             call.redirect(ViewKweet(id))
         }
     }
