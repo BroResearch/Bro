@@ -1,4 +1,4 @@
-package io.ktor.samples.kweet.model
+package model
 
 import java.io.*
 

@@ -1,9 +1,11 @@
+import dao.DAOFacade
+import dao.DAOFacadeCache
+import dao.Kweets
 import io.ktor.http.*
-import io.ktor.samples.kweet.*
-import io.ktor.samples.kweet.dao.*
-import io.ktor.samples.kweet.model.*
 import io.ktor.server.testing.*
 import io.mockk.*
+import model.Kweet
+import model.User
 import org.joda.time.*
 import org.junit.Test
 import kotlin.test.*

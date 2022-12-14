@@ -1,13 +1,13 @@
+import dao.DAOFacade
 import io.ktor.client.plugins.cookies.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import io.ktor.samples.kweet.*
-import io.ktor.samples.kweet.dao.*
-import io.ktor.samples.kweet.model.*
 import io.ktor.server.config.*
 import io.ktor.server.testing.*
 import io.mockk.*
+import model.Kweet
+import model.User
 import org.joda.time.*
 import org.junit.Test
 import kotlin.test.*

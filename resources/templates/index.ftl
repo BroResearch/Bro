@@ -1,5 +1,5 @@
-<#-- @ftlvariable name="top" type="java.util.List<io.ktor.samples.kweet.model.Kweet>" -->
-<#-- @ftlvariable name="latest" type="java.util.List<io.ktor.samples.kweet.model.Kweet>" -->
+<#-- @ftlvariable name="top" type="java.util.List<model.Kweet>" -->
+<#-- @ftlvariable name="latest" type="java.util.List<model.Kweet>" -->
 
 <#import "template.ftl" as layout />
 

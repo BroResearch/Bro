@@ -1,6 +1,7 @@
-package io.ktor.samples.kweet.dao
+package dao
 
-import io.ktor.samples.kweet.model.*
+import model.Kweet
+import model.User
 import org.ehcache.config.builders.CacheConfigurationBuilder
 import org.ehcache.config.builders.CacheManagerBuilder
 import org.ehcache.config.builders.ResourcePoolsBuilder
@@ -64,9 +65,9 @@ class DAOFacadeCache(val delegate: DAOFacade, val storagePath: File) : DAOFacade
         return delegate.countReplies(id)
     }
 
-    override fun createKweet(user: String, text: String, replyTo: Int?, image: String?, date: DateTime): Int {
-        val id = delegate.createKweet(user, text, replyTo, image)
-        val kweet = Kweet(id, user, text, date, replyTo, image)
+    override fun createKweet(user: String, text: String, replyTo: Int?, date: DateTime): Int {
+        val id = delegate.createKweet(user, text, replyTo)
+        val kweet = Kweet(id, user, text, date, replyTo)
         kweetsCache.put(id, kweet)
         return id
     }

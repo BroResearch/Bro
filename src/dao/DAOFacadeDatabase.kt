@@ -1,13 +1,12 @@
-package io.ktor.samples.kweet.dao
+package dao
 
-import io.ktor.samples.kweet.dao.Kweets.id
-import io.ktor.samples.kweet.model.*
+import model.Kweet
+import model.User
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.*
 import org.joda.time.*
 import java.io.*
-import java.util.StringJoiner
 
 /**
  * A DAO Facade interface for the Database. This allows us to provide several implementations.
@@ -31,7 +30,7 @@ interface DAOFacade : Closeable {
      * Creates a Kweet from a specific [user] name, the kweet [text] content,
      * an optional [replyTo] id of the parent kweet, and a [date] that would default to the current time.
      */
-    fun createKweet(user: String, text: String, replyTo: Int? = null, image: String?, date: DateTime = DateTime.now()): Int
+    fun createKweet(user: String, text: String, replyTo: Int? = null, date: DateTime = DateTime.now()): Int
 
     /**
      * Deletes a kweet from its [id].
@@ -42,8 +41,6 @@ interface DAOFacade : Closeable {
      * Get the DAO object representation of a kweet based from its [id].
      */
     fun getKweet(id: Int): Kweet
-
-
 
     /**
      * Obtains a list of integral ids of kweets from a specific user identified by its [userId].
@@ -108,13 +105,12 @@ class DAOFacadeDatabase(
         }.single()[Kweets.id.count()]).toInt()
     }
 
-    override fun createKweet(user: String, text: String, replyTo: Int?, image: String?, date: DateTime): Int = transaction(db) {
+    override fun createKweet(user: String, text: String, replyTo: Int?, date: DateTime): Int = transaction(db) {
         Kweets.insert {
             it[Kweets.user] = user
             it[Kweets.date] = date
             it[Kweets.replyTo] = replyTo
             it[Kweets.text] = text
-            it[Kweets.image] = image
         }.resultedValues?.firstOrNull()?.get(Kweets.id) ?: error("No generated key returned")
     }
 
@@ -126,7 +122,7 @@ class DAOFacadeDatabase(
 
     override fun getKweet(id: Int) = transaction(db) {
         val row = Kweets.select { Kweets.id.eq(id) }.single()
-        Kweet(id, row[Kweets.user], row[Kweets.text], row[Kweets.date], row[Kweets.replyTo], row[Kweets.image])
+        Kweet(id, row[Kweets.user], row[Kweets.text], row[Kweets.date], row[Kweets.replyTo])
     }
 
     override fun userKweets(userId: String) = transaction(db) {

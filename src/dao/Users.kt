@@ -1,4 +1,4 @@
-package io.ktor.samples.kweet.dao
+package dao
 
 import org.jetbrains.exposed.sql.*
 

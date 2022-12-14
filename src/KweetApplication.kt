@@ -1,11 +1,10 @@
-package io.ktor.samples.kweet
-
 import com.mchange.v2.c3p0.*
+import dao.DAOFacade
+import dao.DAOFacadeCache
+import dao.DAOFacadeDatabase
 import freemarker.cache.*
 import io.ktor.http.*
 import io.ktor.resources.*
-import io.ktor.samples.kweet.dao.*
-import io.ktor.samples.kweet.model.*
 import io.ktor.server.application.*
 import io.ktor.server.freemarker.*
 import io.ktor.server.plugins.*
@@ -21,6 +20,7 @@ import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import io.ktor.util.*
 import kotlinx.serialization.Serializable
+import model.User
 import org.h2.*
 import org.jetbrains.exposed.sql.*
 import java.io.*
@@ -40,10 +40,6 @@ class Index()
 @Serializable
 @Resource("/post-new")
 class PostNew()
-
-@Serializable
-@Resource("/uploads/{name}")
-class GetImage(val name: String)
 
 @Serializable
 @Resource("/kweet/{id}/delete")
@@ -172,7 +168,6 @@ fun Application.mainWithDependencies(dao: DAOFacade) {
         styles()
         index(dao)
         postNew(dao, hashFunction)
-        getImage(dao, hashFunction)
         delete(dao, hashFunction)
         userPage(dao)
         viewKweet(dao, hashFunction)

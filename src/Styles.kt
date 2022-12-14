@@ -1,5 +1,3 @@
-package io.ktor.samples.kweet
-
 import io.ktor.resources.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*

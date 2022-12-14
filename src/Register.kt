@@ -1,8 +1,5 @@
-package io.ktor.samples.kweet
-
+import dao.DAOFacade
 import io.ktor.http.*
-import io.ktor.samples.kweet.dao.*
-import io.ktor.samples.kweet.model.*
 import io.ktor.server.application.*
 import io.ktor.server.freemarker.*
 import io.ktor.server.request.*
@@ -11,6 +8,7 @@ import io.ktor.server.resources.post
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
+import model.User
 
 /**
  * Register routes for user registration in the [Register] route (/register)

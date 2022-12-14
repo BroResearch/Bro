@@ -1,8 +1,8 @@
-<#-- @ftlvariable name="user" type="io.ktor.samples.kweet.model.User" -->
+<#-- @ftlvariable name="user" type="model.User" -->
 
 <#macro mainLayout title="Welcome">
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
@@ -46,7 +46,7 @@
 </#macro>
 
 <#macro kweet_li kweet>
-<#-- @ftlvariable name="kweet" type="io.ktor.samples.kweet.model.Kweet" -->
+<#-- @ftlvariable name="kweet" type="model.Kweet" -->
 <section class="post">
     <header class="post-header">
         <p class="post-meta">
