@@ -1,10 +1,10 @@
 import dao.DAOFacade
 import dao.DAOFacadeCache
-import dao.Kweets
+import dao.Posts
 import io.ktor.http.*
 import io.ktor.server.testing.*
 import io.mockk.*
-import model.Kweet
+import model.Post
 import model.User
 import org.joda.time.*
 import org.junit.Test
@@ -15,7 +15,7 @@ import kotlin.test.*
  *
  * Uses [testApp] in test methods to simplify the testing.
  */
-class KweetApplicationTestLegacy {
+class PostApplicationTestLegacy {
     /**
      * A [mockk] instance of the [DAOFacade] to used to verify and mock calls on the integration tests.
      */
@@ -28,7 +28,7 @@ class KweetApplicationTestLegacy {
 
     /**
      * Tests that the [Index] page calls the [DAOFacade.top] and [DAOFacade.latest] methods just once.
-     * And that when no [Kweets] are available, it displays "There are no kweets yet" somewhere.
+     * And that when no [Posts] are available, it displays "There are no kweets yet" somewhere.
      */
     @Test
     fun testEmptyHome() = testApp {
@@ -46,15 +46,15 @@ class KweetApplicationTestLegacy {
 
     /**
      * Tests that the [Index] page calls the [DAOFacade.top] and [DAOFacade.latest] methods just once.
-     * And that when some Kweets are available there is a call to [DAOFacade.getKweet] per provided kweet id
+     * And that when some Kweets are available there is a call to [DAOFacade.getPost] per provided kweet id
      * (the final application will cache with [DAOFacadeCache]).
      * Ensures that it DOESN'T display "There are no kweets yet" when there are kweets available,
      * and that the user of the kweets is also displayed.
      */
     @Test
     fun testHomeWithSomeKweets() = testApp {
-        every { dao.getKweet(1) } returns Kweet(1, "user1", "text1", date, null)
-        every { dao.getKweet(2) } returns Kweet(2, "user2", "text2", date, null)
+        every { dao.getPost(1) } returns Post(1, "user1", "text1", date, null)
+        every { dao.getPost(2) } returns Post(2, "user2", "text2", date, null)
         every { dao.top() } returns listOf(1)
         every { dao.latest() } returns listOf(2)
 
@@ -65,7 +65,7 @@ class KweetApplicationTestLegacy {
             assertTrue(response.content!!.contains("user2"))
         }
 
-        verify(exactly = 2) { dao.getKweet(any()) }
+        verify(exactly = 2) { dao.getPost(any()) }
         verify(exactly = 1) { dao.top() }
         verify(exactly = 1) { dao.latest() }
     }

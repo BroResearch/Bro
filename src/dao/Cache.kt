@@ -1,6 +1,6 @@
 package dao
 
-import model.Kweet
+import model.Post
 import model.User
 import org.ehcache.config.builders.CacheConfigurationBuilder
 import org.ehcache.config.builders.CacheManagerBuilder
@@ -16,17 +16,17 @@ import java.io.*
  */
 class DAOFacadeCache(val delegate: DAOFacade, val storagePath: File) : DAOFacade {
     /**
-     * Build a cache manager with a cache for kweets and other for users.
+     * Build a cache manager with a cache for posts and other for users.
      * It uses the specified [storagePath] for persistence.
      * Limits the cache to 1000 entries, 10MB in memory, and 100MB in disk per both caches.
      */
-    val cacheManager = CacheManagerBuilder.newCacheManagerBuilder()
+    private val cacheManager = CacheManagerBuilder.newCacheManagerBuilder()
         .with(CacheManagerPersistenceConfiguration(storagePath))
         .withCache(
-            "kweetsCache",
-            CacheConfigurationBuilder.newCacheConfigurationBuilder<Int, Kweet>(
+            "postsCache",
+            CacheConfigurationBuilder.newCacheConfigurationBuilder<Int, Post>(
                 Int::class.javaObjectType,
-                Kweet::class.java,
+                Post::class.java,
 
                 ResourcePoolsBuilder.newResourcePoolsBuilder()
                     .heap(1000, EntryUnit.ENTRIES)
@@ -48,14 +48,14 @@ class DAOFacadeCache(val delegate: DAOFacade, val storagePath: File) : DAOFacade
         .build(true)
 
     /**
-     * Gets the cache for kweets represented by an [Int] key and a [Kweet] value.
+     * Gets the cache for posts represented by an [Int] key and a [Post] value.
      */
-    val kweetsCache = cacheManager.getCache("kweetsCache", Int::class.javaObjectType, Kweet::class.java)
+    private val postsCache = cacheManager.getCache("postsCache", Int::class.javaObjectType, Post::class.java)
 
     /**
      * Gets the cache for users represented by a [String] key and a [User] value.
      */
-    val usersCache = cacheManager.getCache("usersCache", String::class.java, User::class.java)
+    private val usersCache = cacheManager.getCache("usersCache", String::class.java, User::class.java)
 
     override fun init() {
         delegate.init()
@@ -65,34 +65,34 @@ class DAOFacadeCache(val delegate: DAOFacade, val storagePath: File) : DAOFacade
         return delegate.countReplies(id)
     }
 
-    override fun createKweet(user: String, text: String, replyTo: Int?, date: DateTime): Int {
-        val id = delegate.createKweet(user, text, replyTo)
-        val kweet = Kweet(id, user, text, date, replyTo)
-        kweetsCache.put(id, kweet)
+    override fun createPost(user: String, text: String, replyTo: Int?, date: DateTime): Int {
+        val id = delegate.createPost(user, text, replyTo)
+        val post = Post(id, user, text, date, replyTo)
+        postsCache.put(id, post)
         return id
     }
 
-    override fun deleteKweet(id: Int) {
-        delegate.deleteKweet(id)
-        kweetsCache.remove(id)
+    override fun deletePost(id: Int) {
+        delegate.deletePost(id)
+        postsCache.remove(id)
     }
 
-    override fun getKweet(id: Int): Kweet {
-        // Returns a cached Kweet when available in the cache.
-        val cached = kweetsCache.get(id)
+    override fun getPost(id: Int): Post {
+        // Returns a cached Post when available in the cache.
+        val cached = postsCache.get(id)
         if (cached != null) {
             return cached
         }
 
         // If not available, we get it from the delegate and store it in the cache, so we can access it later.
-        val kweet = delegate.getKweet(id)
-        kweetsCache.put(id, kweet)
+        val post = delegate.getPost(id)
+        postsCache.put(id, post)
 
-        return kweet
+        return post
     }
 
-    override fun userKweets(userId: String): List<Int> {
-        return delegate.userKweets(userId)
+    override fun userPosts(userId: String): List<Int> {
+        return delegate.userPosts(userId)
     }
 
     override fun user(userId: String, hash: String?): User? {
@@ -139,10 +139,8 @@ class DAOFacadeCache(val delegate: DAOFacade, val storagePath: File) : DAOFacade
     }
 
     override fun close() {
-        try {
+        cacheManager.use {
             delegate.close()
-        } finally {
-            cacheManager.close()
         }
     }
 }

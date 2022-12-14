@@ -1,6 +1,6 @@
 <#-- @ftlvariable name="date" type="java.lang.Long" -->
 <#-- @ftlvariable name="code" type="java.lang.String" -->
-<#-- @ftlvariable name="kweet" type="model.Kweet" -->
+<#-- @ftlvariable name="kweet" type="model.Post" -->
 <#import "template.ftl" as layout />
 
 <@layout.mainLayout title="New kweet">

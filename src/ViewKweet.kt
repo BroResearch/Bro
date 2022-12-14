@@ -1,5 +1,5 @@
 import dao.DAOFacade
-import model.Kweet
+import model.Post
 import io.ktor.server.application.*
 import io.ktor.server.freemarker.*
 import io.ktor.server.resources.*
@@ -12,7 +12,7 @@ import io.ktor.server.sessions.*
  */
 fun Route.viewKweet(dao: DAOFacade, hashFunction: (String) -> String) {
     /**
-     * This page shows the [Kweet] content and its replies.
+     * This page shows the [Post] content and its replies.
      * If there is a user logged in, and the kweet is from her/him, it will provide secured links to remove it.
      */
     get<ViewKweet> {
@@ -23,7 +23,7 @@ fun Route.viewKweet(dao: DAOFacade, hashFunction: (String) -> String) {
         call.respond(
             FreeMarkerContent(
                 "view-kweet.ftl",
-                mapOf("user" to user, "kweet" to dao.getKweet(it.id), "date" to date, "code" to code),
+                mapOf("user" to user, "kweet" to dao.getPost(it.id), "date" to date, "code" to code),
                 user?.userId ?: ""
             )
         )

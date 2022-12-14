@@ -16,8 +16,8 @@ fun Route.index(dao: DAOFacade) {
         val user = call.sessions.get<KweetSession>()?.let { dao.user(it.userId) }
 
         // Obtains several lists of kweets using different sorting and filters.
-        val top = dao.top(10).map { dao.getKweet(it) }
-        val latest = dao.latest(10).map { dao.getKweet(it) }
+        val top = dao.top(10).map { dao.getPost(it) }
+        val latest = dao.latest(10).map { dao.getPost(it) }
 
         // Generates an ETag unique string for this route that will be used for caching.
         val etagString =

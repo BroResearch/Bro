@@ -8,7 +8,7 @@ import kotlinx.serialization.*
 
 @Serializable
 @Resource("/styles/main.css")
-class MainCss()
+class MainCss
 
 /**
  * Register the styles, [MainCss] route (/styles/main.css)

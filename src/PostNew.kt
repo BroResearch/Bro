@@ -1,5 +1,5 @@
 import dao.DAOFacade
-import model.Kweet
+import model.Post
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.freemarker.*
@@ -39,9 +39,9 @@ fun Route.postNew(dao: DAOFacade, hashFunction: (String) -> String) {
         }
     }
     /**
-     * A POST request actually tries to create a new [Kweet].
+     * A POST request actually tries to create a new [Post].
      * It validates the `date`, `code` and `text` parameters and redirects to the login page on failure.
-     * On success, it creates the new [Kweet] and redirect to the [ViewKweet] page to view that specific Kweet.
+     * On success, it creates the new [Post] and redirect to the [ViewKweet] page to view that specific Kweet.
      */
     post<PostNew> {
         val user = call.sessions.get<KweetSession>()?.let { dao.user(it.userId) }
@@ -54,7 +54,7 @@ fun Route.postNew(dao: DAOFacade, hashFunction: (String) -> String) {
         if (user == null || !call.verifyCode(date, user, code, hashFunction)) {
             call.redirect(Login())
         } else {
-            val id = dao.createKweet(user.userId, text, null)
+            val id = dao.createPost(user.userId, text, null)
             call.redirect(ViewKweet(id))
         }
     }

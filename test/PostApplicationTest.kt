@@ -6,7 +6,7 @@ import io.ktor.http.*
 import io.ktor.server.config.*
 import io.ktor.server.testing.*
 import io.mockk.*
-import model.Kweet
+import model.Post
 import model.User
 import org.joda.time.*
 import org.junit.Test
@@ -15,7 +15,7 @@ import kotlin.test.*
 /**
  * Integration tests for the [main] module.
  */
-class KweetApplicationTest {
+class PostApplicationTest {
     /**
      * A [mockk] instance of the [DAOFacade] to used to verify and mock calls on the integration tests.
      */
@@ -46,8 +46,8 @@ class KweetApplicationTest {
     fun testHomeWithSomeKweets() = testApplication {
         setupApp()
 
-        every { dao.getKweet(1) } returns Kweet(1, "user1", "text1", date, null)
-        every { dao.getKweet(2) } returns Kweet(2, "user2", "text2", date, null)
+        every { dao.getPost(1) } returns Post(1, "user1", "text1", date, null)
+        every { dao.getPost(2) } returns Post(2, "user2", "text2", date, null)
         every { dao.top() } returns listOf(1)
         every { dao.latest() } returns listOf(2)
 
@@ -58,7 +58,7 @@ class KweetApplicationTest {
             assertTrue(bodyAsText().contains("user2"))
         }
 
-        verify(exactly = 2) { dao.getKweet(any()) }
+        verify(exactly = 2) { dao.getPost(any()) }
         verify(exactly = 1) { dao.top() }
         verify(exactly = 1) { dao.latest() }
     }

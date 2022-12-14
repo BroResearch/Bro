@@ -1,6 +1,6 @@
 package dao
 
-import model.Kweet
+import model.Post
 import model.User
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
@@ -17,35 +17,35 @@ import java.io.*
 interface DAOFacade : Closeable {
     /**
      * Initializes all the required data.
-     * In this case, this should initialize the Users and Kweets tables.
+     * In this case, this should initialize the Users and Posts tables.
      */
     fun init()
 
     /**
-     * Counts the number of replies of a kweet identified by its [id].
+     * Counts the number of replies of a post identified by its [id].
      */
     fun countReplies(id: Int): Int
 
     /**
-     * Creates a Kweet from a specific [user] name, the kweet [text] content,
-     * an optional [replyTo] id of the parent kweet, and a [date] that would default to the current time.
+     * Creates a Post from a specific [user] name, the Post [text] content,
+     * an optional [replyTo] id of the parent post, and a [date] that would default to the current time.
      */
-    fun createKweet(user: String, text: String, replyTo: Int? = null, date: DateTime = DateTime.now()): Int
+    fun createPost(user: String, text: String, replyTo: Int? = null, date: DateTime = DateTime.now()): Int
 
     /**
-     * Deletes a kweet from its [id].
+     * Deletes a post from its [id].
      */
-    fun deleteKweet(id: Int)
+    fun deletePost(id: Int)
 
     /**
-     * Get the DAO object representation of a kweet based from its [id].
+     * Get the DAO object representation of a post based from its [id].
      */
-    fun getKweet(id: Int): Kweet
+    fun getPost(id: Int): Post
 
     /**
-     * Obtains a list of integral ids of kweets from a specific user identified by its [userId].
+     * Obtains a list of integral ids of posts from a specific user identified by its [userId].
      */
-    fun userKweets(userId: String): List<Int>
+    fun userPosts(userId: String): List<Int>
 
     /**
      * Tries to get a user from its [userId] and optionally its password [hash].
@@ -67,12 +67,12 @@ interface DAOFacade : Closeable {
     fun createUser(user: User)
 
     /**
-     * Returns a list of Kweet ids, with the ones with most replies first.
+     * Returns a list of Post ids, with the ones with most replies first.
      */
     fun top(count: Int = 10): List<Int>
 
     /**
-     * Returns a list of Keet ids, with the recent ones first.
+     * Returns a list of Post ids, with the recent ones first.
      */
     fun latest(count: Int = 10): List<Int>
 }
@@ -83,7 +83,7 @@ interface DAOFacade : Closeable {
  * But it can be configured.
  */
 class DAOFacadeDatabase(
-    val db: Database = Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
+    private val db: Database = Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
 ) : DAOFacade {
     constructor(dir: File) : this(
         Database.connect(
@@ -95,39 +95,39 @@ class DAOFacadeDatabase(
     override fun init() {
         // Create the used tables
         transaction(db) {
-            SchemaUtils.create(Users, Kweets)
+            SchemaUtils.create(Users, Posts)
         }
     }
 
     override fun countReplies(id: Int): Int = transaction(db) {
-        (Kweets.slice(Kweets.id.count()).select {
-            Kweets.replyTo.eq(id)
-        }.single()[Kweets.id.count()]).toInt()
+        (Posts.slice(Posts.id.count()).select {
+            Posts.replyTo.eq(id)
+        }.single()[Posts.id.count()]).toInt()
     }
 
-    override fun createKweet(user: String, text: String, replyTo: Int?, date: DateTime): Int = transaction(db) {
-        Kweets.insert {
-            it[Kweets.user] = user
-            it[Kweets.date] = date
-            it[Kweets.replyTo] = replyTo
-            it[Kweets.text] = text
-        }.resultedValues?.firstOrNull()?.get(Kweets.id) ?: error("No generated key returned")
+    override fun createPost(user: String, text: String, replyTo: Int?, date: DateTime): Int = transaction(db) {
+        Posts.insert {
+            it[Posts.user] = user
+            it[Posts.date] = date
+            it[Posts.replyTo] = replyTo
+            it[Posts.text] = text
+        }.resultedValues?.firstOrNull()?.get(Posts.id) ?: error("No generated key returned")
     }
 
-    override fun deleteKweet(id: Int) {
+    override fun deletePost(id: Int) {
         transaction(db) {
-            Kweets.deleteWhere { Kweets.id.eq(id) }
+            Posts.deleteWhere { Posts.id.eq(id) }
         }
     }
 
-    override fun getKweet(id: Int) = transaction(db) {
-        val row = Kweets.select { Kweets.id.eq(id) }.single()
-        Kweet(id, row[Kweets.user], row[Kweets.text], row[Kweets.date], row[Kweets.replyTo])
+    override fun getPost(id: Int) = transaction(db) {
+        val row = Posts.select { Posts.id.eq(id) }.single()
+        Post(id, row[Posts.user], row[Posts.text], row[Posts.date], row[Posts.replyTo])
     }
 
-    override fun userKweets(userId: String) = transaction(db) {
-        Kweets.slice(Kweets.id).select { Kweets.user.eq(userId) }.orderBy(Kweets.date, SortOrder.DESC).limit(100)
-            .map { it[Kweets.id] }
+    override fun userPosts(userId: String) = transaction(db) {
+        Posts.slice(Posts.id).select { Posts.user.eq(userId) }.orderBy(Posts.date, SortOrder.DESC).limit(100)
+            .map { it[Posts.id] }
     }
 
     override fun user(userId: String, hash: String?) = transaction(db) {
@@ -162,15 +162,15 @@ class DAOFacadeDatabase(
         //   as it may cause database outages on big data
         //   so this implementation is just for demo purposes
 
-        val k2 = Kweets.alias("k2")
-        Kweets.join(k2, JoinType.LEFT, Kweets.id, k2[Kweets.replyTo])
-            .slice(Kweets.id, k2[Kweets.id].count())
+        val k2 = Posts.alias("k2")
+        Posts.join(k2, JoinType.LEFT, Posts.id, k2[Posts.replyTo])
+            .slice(Posts.id, k2[Posts.id].count())
             .selectAll()
-            .groupBy(Kweets.id)
-            .orderBy(k2[Kweets.id].count(), SortOrder.DESC)
+            .groupBy(Posts.id)
+            .orderBy(k2[Posts.id].count(), SortOrder.DESC)
 //                .having { k2[Kweets.id].count().greater(0) }
             .limit(count)
-            .map { it[Kweets.id] }
+            .map { it[Posts.id] }
     }
 
     override fun latest(count: Int): List<Int> = transaction(db) {
@@ -182,19 +182,19 @@ class DAOFacadeDatabase(
 
             val dt = DateTime.now().minusMinutes(minutes)
 
-            val all = Kweets.slice(Kweets.id)
-                .select { Kweets.date.greater(dt) }
-                .orderBy(Kweets.date, SortOrder.DESC)
+            val all = Posts.slice(Posts.id)
+                .select { Posts.date.greater(dt) }
+                .orderBy(Posts.date, SortOrder.DESC)
                 .limit(count)
-                .map { it[Kweets.id] }
+                .map { it[Posts.id] }
 
             if (all.size >= count) {
                 return@transaction all
             }
             if (attempt > 10 && allCount == null) {
-                allCount = Kweets.slice(Kweets.id.count()).selectAll().count().toInt()
+                allCount = Posts.slice(Posts.id.count()).selectAll().count().toInt()
                 if (allCount <= count) {
-                    return@transaction Kweets.slice(Kweets.id).selectAll().map { it[Kweets.id] }
+                    return@transaction Posts.slice(Posts.id).selectAll().map { it[Posts.id] }
                 }
             }
         }

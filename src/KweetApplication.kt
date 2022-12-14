@@ -35,11 +35,11 @@ import javax.crypto.spec.*
 
 @Serializable
 @Resource("/")
-class Index()
+class Index
 
 @Serializable
 @Resource("/post-new")
-class PostNew()
+class PostNew
 
 @Serializable
 @Resource("/kweet/{id}/delete")
@@ -68,7 +68,7 @@ data class Login(val userId: String = "", val error: String = "")
 
 @Serializable
 @Resource("/logout")
-class Logout()
+class Logout
 
 /**
  * Represents a session in this site containing the user ID.

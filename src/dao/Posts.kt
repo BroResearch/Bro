@@ -4,9 +4,9 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.jodatime.*
 
 /**
- * Represents the Kweets table using Exposed as DAO.
+ * Represents the Posts table using Exposed as DAO.
  */
-object Kweets : Table() {
+object Posts : Table() {
     val id = integer("id").autoIncrement()
     val user = varchar("user_id", 20).index()
     val date = datetime("date")

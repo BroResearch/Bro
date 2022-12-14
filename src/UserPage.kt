@@ -23,7 +23,7 @@ fun Route.userPage(dao: DAOFacade) {
         if (pageUser == null) {
             call.respond(HttpStatusCode.NotFound.description("User ${it.user} doesn't exist"))
         } else {
-            val kweets = dao.userKweets(it.user).map { dao.getKweet(it) }
+            val kweets = dao.userPosts(it.user).map { dao.getPost(it) }
             val etag = (user?.userId ?: "") + "_" + kweets.map { it.text.hashCode() }.hashCode().toString()
 
             call.respond(
