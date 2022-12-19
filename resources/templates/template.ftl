@@ -49,6 +49,7 @@
 <#-- @ftlvariable name="kweet" type="model.Post" -->
 <section class="post">
     <header class="post-header">
+        <img src="/uploads/${kweet.image}" alt="${kweet.id} img">
         <p class="post-meta">
             <a href="/post/${kweet.id}">${kweet.date.toDate()?string("yyyy.MM.dd HH:mm:ss")}</a>
             by <a href="/user/${kweet.userId}">${kweet.userId}</a></p>

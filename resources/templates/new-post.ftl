@@ -9,6 +9,10 @@
         <textarea id="post-text" name="text" rows="30" cols="100"></textarea>
     </label>
 
+    <label for="post-text">Image:
+        <input type="file" name="image" accept="image/png, image/jpeg" required>
+    </label>
+
     <input class="pure-button pure-button-primary" type="submit" value="Post">
 
 </form>

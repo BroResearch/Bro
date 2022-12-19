@@ -22,15 +22,10 @@ interface DAOFacade : Closeable {
     fun init()
 
     /**
-     * Counts the number of replies of a post identified by its [id].
+     * Creates a Post from a specific [user] name, the Post [text] content
+     * and a [date] that would default to the current time.
      */
-    fun countReplies(id: Int): Int
-
-    /**
-     * Creates a Post from a specific [user] name, the Post [text] content,
-     * an optional [replyTo] id of the parent post, and a [date] that would default to the current time.
-     */
-    fun createPost(user: String, text: String, replyTo: Int? = null, date: DateTime = DateTime.now()): Int
+    fun createPost(user: String, text: String, image: String, date: DateTime = DateTime.now()): Int
 
     /**
      * Deletes a post from its [id].
@@ -99,18 +94,12 @@ class DAOFacadeDatabase(
         }
     }
 
-    override fun countReplies(id: Int): Int = transaction(db) {
-        (Posts.slice(Posts.id.count()).select {
-            Posts.replyTo.eq(id)
-        }.single()[Posts.id.count()]).toInt()
-    }
-
-    override fun createPost(user: String, text: String, replyTo: Int?, date: DateTime): Int = transaction(db) {
+    override fun createPost(user: String, text: String, image: String, date: DateTime): Int = transaction(db) {
         Posts.insert {
             it[Posts.user] = user
             it[Posts.date] = date
-            it[Posts.replyTo] = replyTo
             it[Posts.text] = text
+            it[Posts.image] = image
         }.resultedValues?.firstOrNull()?.get(Posts.id) ?: error("No generated key returned")
     }
 
@@ -122,7 +111,7 @@ class DAOFacadeDatabase(
 
     override fun getPost(id: Int) = transaction(db) {
         val row = Posts.select { Posts.id.eq(id) }.single()
-        Post(id, row[Posts.user], row[Posts.text], row[Posts.date], row[Posts.replyTo])
+        Post(id, row[Posts.user], row[Posts.date], row[Posts.text], row[Posts.image])
     }
 
     override fun userPosts(userId: String) = transaction(db) {
@@ -163,12 +152,11 @@ class DAOFacadeDatabase(
         //   so this implementation is just for demo purposes
 
         val k2 = Posts.alias("k2")
-        Posts.join(k2, JoinType.LEFT, Posts.id, k2[Posts.replyTo])
+        Posts.join(k2, JoinType.LEFT, Posts.id, k2[Posts.id])
             .slice(Posts.id, k2[Posts.id].count())
             .selectAll()
             .groupBy(Posts.id)
             .orderBy(k2[Posts.id].count(), SortOrder.DESC)
-//                .having { k2[Kweets.id].count().greater(0) }
             .limit(count)
             .map { it[Posts.id] }
     }

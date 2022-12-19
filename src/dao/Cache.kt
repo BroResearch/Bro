@@ -61,13 +61,9 @@ class DAOFacadeCache(val delegate: DAOFacade, val storagePath: File) : DAOFacade
         delegate.init()
     }
 
-    override fun countReplies(id: Int): Int {
-        return delegate.countReplies(id)
-    }
-
-    override fun createPost(user: String, text: String, replyTo: Int?, date: DateTime): Int {
-        val id = delegate.createPost(user, text, replyTo)
-        val post = Post(id, user, text, date, replyTo)
+    override fun createPost(user: String, text: String, image: String, date: DateTime): Int {
+        val id = delegate.createPost(user, text, image)
+        val post = Post(id, user, date, text, image)
         postsCache.put(id, post)
         return id
     }

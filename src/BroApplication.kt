@@ -166,6 +166,7 @@ fun Application.mainWithDependencies(dao: DAOFacade) {
     // applications keeping a reasonable number of lines per file.
     routing {
         styles()
+        uploads()
         index(dao)
         postNew(dao, hashFunction)
         delete(dao, hashFunction)

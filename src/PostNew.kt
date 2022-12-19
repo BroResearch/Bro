@@ -83,7 +83,7 @@ fun Route.postNew(dao: DAOFacade, hashFunction: (String) -> String) {
         if (user == null || !call.verifyCode(date, user, code, hashFunction)) {
             call.redirect(Login())
         } else {
-            val id = dao.createPost(user.userId, text, null)
+            val id = dao.createPost(user.userId, text, fileName)
             call.redirect(ViewPost(id))
         }
     }
