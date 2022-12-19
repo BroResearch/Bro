@@ -18,16 +18,17 @@ class Uploads
 fun Route.uploads() {
     /**
      * On a GET request to the [Uploads] route, it returns the `file` file from the resources.
-     *
      */
     get<Uploads> {
         val imageName = call.parameters["imageName"]
         val file = File("./uploads/$imageName")
-        if(file.exists()){
-            call.respondFile(File("./uploads/$imageName"))
-        }
-        else{
-            call.respondText("Image not found", status = HttpStatusCode.NotFound)
+
+        with(file){
+            if (this.exists()){
+                call.respondFile(this)
+            } else {
+                call.respondText("Image not found", status = HttpStatusCode.NotFound)
+            }
         }
     }
 }

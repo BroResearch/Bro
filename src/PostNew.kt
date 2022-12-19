@@ -1,6 +1,7 @@
 import dao.DAOFacade
 import model.Post
 import io.ktor.http.content.*
+import io.ktor.resources.*
 import io.ktor.server.application.*
 import io.ktor.server.freemarker.*
 import io.ktor.server.request.*
@@ -9,7 +10,12 @@ import io.ktor.server.resources.post
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
+import kotlinx.serialization.Serializable
 import java.io.File
+
+@Serializable
+@Resource("/post-new")
+class PostNew
 
 /**
  * Register routes for the [PostNew] route '/post-new'

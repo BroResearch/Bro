@@ -1,74 +1,33 @@
-import com.mchange.v2.c3p0.*
+import com.mchange.v2.c3p0.ComboPooledDataSource
 import dao.DAOFacade
 import dao.DAOFacadeCache
 import dao.DAOFacadeDatabase
-import freemarker.cache.*
+import freemarker.cache.ClassTemplateLoader
 import io.ktor.http.*
-import io.ktor.resources.*
 import io.ktor.server.application.*
 import io.ktor.server.freemarker.*
-import io.ktor.server.plugins.*
 import io.ktor.server.plugins.callloging.*
 import io.ktor.server.plugins.conditionalheaders.*
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.plugins.partialcontent.*
 import io.ktor.server.request.*
 import io.ktor.server.resources.*
-import io.ktor.server.resources.Resources
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import io.ktor.util.*
-import kotlinx.serialization.Serializable
 import model.User
-import org.h2.*
-import org.jetbrains.exposed.sql.*
-import java.io.*
-import java.net.*
-import java.util.concurrent.*
-import javax.crypto.*
-import javax.crypto.spec.*
+import org.h2.Driver
+import org.jetbrains.exposed.sql.Database
+import java.io.File
+import java.net.URI
+import java.util.concurrent.TimeUnit
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
 
 /*
  * Classes are used by the Resources plugin to build URLs and register routes.
  */
-
-@Serializable
-@Resource("/")
-class Index
-
-@Serializable
-@Resource("/post-new")
-class PostNew
-
-@Serializable
-@Resource("/post/{id}/delete")
-class PostDelete(val id: Int)
-
-@Serializable
-@Resource("/post/{id}")
-data class ViewPost(val id: Int)
-
-@Serializable
-@Resource("/user/{user}")
-data class UserPage(val user: String)
-
-@Serializable
-@Resource("/register")
-data class Register(
-    val userId: String = "",
-    val displayName: String = "",
-    val email: String = "",
-    val error: String = ""
-)
-
-@Serializable
-@Resource("/login")
-data class Login(val userId: String = "", val error: String = "")
-
-@Serializable
-@Resource("/logout")
-class Logout
 
 /**
  * Represents a session in this site containing the user ID.
@@ -220,7 +179,7 @@ fun ApplicationCall.refererHost() = request.header(HttpHeaders.Referrer)?.let { 
 /**
  * Pattern to validate an `userId`
  */
-private val userIdPattern = "[a-zA-Z0-9_\\.]+".toRegex()
+private val userIdPattern = "[a-zA-Z0-9_.]+".toRegex()
 
 /**
  * Validates that an [userId] (that is also the username) is a valid identifier.

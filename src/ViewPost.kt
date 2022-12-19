@@ -1,4 +1,5 @@
 import dao.DAOFacade
+import io.ktor.resources.*
 import model.Post
 import io.ktor.server.application.*
 import io.ktor.server.freemarker.*
@@ -6,6 +7,11 @@ import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
+import kotlinx.serialization.Serializable
+
+@Serializable
+@Resource("/post/{id}")
+data class ViewPost(val id: Int)
 
 /**
  * Registers the [ViewPost] route. (/post/{id})

@@ -8,5 +8,5 @@ data class Post(
     val userId: String,
     val date: DateTime,
     val text: String,
-    val image: String) :
-    Serializable
+    val image: String
+) : Serializable

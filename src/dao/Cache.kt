@@ -14,7 +14,7 @@ import java.io.*
  * An Ehcache based implementation for the [DAOFacade] that uses a [delegate] facade and a [storagePath]
  * and perform several caching strategies for each domain operation.
  */
-class DAOFacadeCache(val delegate: DAOFacade, val storagePath: File) : DAOFacade {
+class DAOFacadeCache(private val delegate: DAOFacade, private val storagePath: File) : DAOFacade {
     /**
      * Build a cache manager with a cache for posts and other for users.
      * It uses the specified [storagePath] for persistence.

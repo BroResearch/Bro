@@ -1,5 +1,6 @@
 import dao.DAOFacade
 import io.ktor.http.*
+import io.ktor.resources.*
 import io.ktor.server.application.*
 import io.ktor.server.freemarker.*
 import io.ktor.server.request.*
@@ -8,7 +9,15 @@ import io.ktor.server.resources.post
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
+import kotlinx.serialization.Serializable
 
+@Serializable
+@Resource("/login")
+data class Login(val userId: String = "", val error: String = "")
+
+@Serializable
+@Resource("/logout")
+class Logout
 /**
  * Registers the [Login] and [Logout] routes '/login' and '/logout'.
  */

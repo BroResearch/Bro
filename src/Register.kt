@@ -1,5 +1,6 @@
 import dao.DAOFacade
 import io.ktor.http.*
+import io.ktor.resources.*
 import io.ktor.server.application.*
 import io.ktor.server.freemarker.*
 import io.ktor.server.request.*
@@ -8,8 +9,17 @@ import io.ktor.server.resources.post
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
+import kotlinx.serialization.Serializable
 import model.User
 
+@Serializable
+@Resource("/register")
+data class Register(
+    val userId: String = "",
+    val displayName: String = "",
+    val email: String = "",
+    val error: String = ""
+)
 /**
  * Register routes for user registration in the [Register] route (/register)
  */
@@ -30,7 +40,6 @@ fun Route.register(dao: DAOFacade, hashFunction: (String) -> String) {
         if (user != null) return@post call.redirect(UserPage(user.userId))
 
         // receive post data
-        // TODO: use conneg when it's ready and `call.receive<Register>()`
         val registration = call.receive<Parameters>()
         val userId = registration["userId"] ?: return@post call.redirect(it)
         val password = registration["password"] ?: return@post call.redirect(it)

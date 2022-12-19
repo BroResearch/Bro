@@ -1,10 +1,16 @@
 import dao.DAOFacade
 import io.ktor.http.*
+import io.ktor.resources.*
 import io.ktor.server.application.*
 import io.ktor.server.resources.post
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
+import kotlinx.serialization.Serializable
+
+@Serializable
+@Resource("/post/{id}/delete")
+class PostDelete(val id: Int)
 
 /**
  * Registers a route for deleting deleting posts.

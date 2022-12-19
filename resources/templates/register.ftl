@@ -4,7 +4,7 @@
 <#import "template.ftl" as layout />
 
 <@layout.mainLayout title="Welcome">
-<form class="pure-form-stacked" action="/register" method="post" enctype="application/x-www-form-urlencoded">
+<form class="pure-form-stacked" action="/register" method="post" enctype="multipart/form-data">
     <#if error??>
         <p class="error">${error}</p>
     </#if>
