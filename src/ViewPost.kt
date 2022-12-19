@@ -8,21 +8,21 @@ import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 
 /**
- * Registers the [ViewKweet] route. (/kweet/{id})
+ * Registers the [ViewPost] route. (/post/{id})
  */
-fun Route.viewKweet(dao: DAOFacade, hashFunction: (String) -> String) {
+fun Route.viewPost(dao: DAOFacade, hashFunction: (String) -> String) {
     /**
      * This page shows the [Post] content and its replies.
-     * If there is a user logged in, and the kweet is from her/him, it will provide secured links to remove it.
+     * If there is a user logged in, and the post is from her/him, it will provide secured links to remove it.
      */
-    get<ViewKweet> {
-        val user = call.sessions.get<KweetSession>()?.let { dao.user(it.userId) }
+    get<ViewPost> {
+        val user = call.sessions.get<BroSession>()?.let { dao.user(it.userId) }
         val date = System.currentTimeMillis()
         val code = if (user != null) call.securityCode(date, user, hashFunction) else null
 
         call.respond(
             FreeMarkerContent(
-                "view-kweet.ftl",
+                "view-post.ftl",
                 mapOf("user" to user, "kweet" to dao.getPost(it.id), "date" to date, "code" to code),
                 user?.userId ?: ""
             )

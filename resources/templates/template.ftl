@@ -50,7 +50,7 @@
 <section class="post">
     <header class="post-header">
         <p class="post-meta">
-            <a href="/kweet/${kweet.id}">${kweet.date.toDate()?string("yyyy.MM.dd HH:mm:ss")}</a>
+            <a href="/post/${kweet.id}">${kweet.date.toDate()?string("yyyy.MM.dd HH:mm:ss")}</a>
             by <a href="/user/${kweet.userId}">${kweet.userId}</a></p>
     </header>
     <div class="post-description">${kweet.text}</div>

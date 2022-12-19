@@ -13,9 +13,9 @@ fun Route.index(dao: DAOFacade) {
     // Uses the Location plugin to register a get route for '/'.
     get<Index> {
         // Tries to get the user from the session (null if failure)
-        val user = call.sessions.get<KweetSession>()?.let { dao.user(it.userId) }
+        val user = call.sessions.get<BroSession>()?.let { dao.user(it.userId) }
 
-        // Obtains several lists of kweets using different sorting and filters.
+        // Obtains several lists of posts using different sorting and filters.
         val top = dao.top(10).map { dao.getPost(it) }
         val latest = dao.latest(10).map { dao.getPost(it) }
 

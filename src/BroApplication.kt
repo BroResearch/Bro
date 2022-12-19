@@ -42,12 +42,12 @@ class Index
 class PostNew
 
 @Serializable
-@Resource("/kweet/{id}/delete")
-class KweetDelete(val id: Int)
+@Resource("/post/{id}/delete")
+class PostDelete(val id: Int)
 
 @Serializable
-@Resource("/kweet/{id}")
-data class ViewKweet(val id: Int)
+@Resource("/post/{id}")
+data class ViewPost(val id: Int)
 
 @Serializable
 @Resource("/user/{user}")
@@ -73,7 +73,7 @@ class Logout
 /**
  * Represents a session in this site containing the user ID.
  */
-data class KweetSession(val userId: String)
+data class BroSession(val userId: String)
 
 /**
  * A hardcoded secret hash key used to hash the passwords, and to authenticate the sessions.
@@ -149,11 +149,11 @@ fun Application.mainWithDependencies(dao: DAOFacade) {
     install(FreeMarker) {
         templateLoader = ClassTemplateLoader(this::class.java.classLoader, "templates")
     }
-    // Configure the session to be represented by a [KweetSession],
+    // Configure the session to be represented by a [BroSession],
     // using the SESSION cookie to store it, and transforming it to be authenticated with the [hashKey].
     // it is sent in a plain text, but since it is authenticated can't be modified without knowing the secret [hashKey].
     install(Sessions) {
-        cookie<KweetSession>("SESSION") {
+        cookie<BroSession>("SESSION") {
             transform(SessionTransportTransformerMessageAuthentication(hashKey))
         }
     }
@@ -170,7 +170,7 @@ fun Application.mainWithDependencies(dao: DAOFacade) {
         postNew(dao, hashFunction)
         delete(dao, hashFunction)
         userPage(dao)
-        viewKweet(dao, hashFunction)
+        viewPost(dao, hashFunction)
 
         login(dao, hashFunction)
         register(dao, hashFunction)
