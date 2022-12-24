@@ -1,4 +1,4 @@
-# Kweet
+# Bro
 
 A messaging application that uses [FreeMarker](https://ktor.io/docs/freemarker.html) templates and the [Resources](https://ktor.io/docs/type-safe-routing.html) plugin.
 
