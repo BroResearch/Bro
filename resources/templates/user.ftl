@@ -1,10 +1,10 @@
 <#-- @ftlvariable name="pageUser" type="model.User" -->
-<#-- @ftlvariable name="kweets" type="java.util.List<model.Post>" -->
+<#-- @ftlvariable name="posts" type="java.util.List<model.Post>" -->
 
 <#import "template.ftl" as layout />
 
 <@layout.mainLayout title="User ${pageUser.displayName}">
-<h3>User's kweets</h3>
+<h3>User's posts</h3>
 
-<@layout.kweets_list kweets=kweets></@layout.kweets_list>
+<@layout.posts_list posts=posts></@layout.posts_list>
 </@layout.mainLayout>

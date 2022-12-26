@@ -1,7 +1,7 @@
 <#import "template.ftl" as layout />
 
-<@layout.mainLayout title="New kweet">
-<form class="pure-form-stacked" action="/post-new" method="post" enctype="multipart/form-data">
+<@layout.mainLayout title="New post">
+<form action="/post-new" method="post" enctype="multipart/form-data">
     <input type="hidden" name="date" value="${date?c}">
     <input type="hidden" name="code" value="${code}">
 
@@ -13,7 +13,6 @@
         <input type="file" name="image" accept="image/png, image/jpeg" required>
     </label>
 
-    <input class="pure-button pure-button-primary" type="submit" value="Post">
-
+    <input type="submit" value="Post">
 </form>
 </@layout.mainLayout>

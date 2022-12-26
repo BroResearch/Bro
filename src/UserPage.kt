@@ -35,7 +35,7 @@ fun Route.userPage(dao: DAOFacade) {
             call.respond(
                 FreeMarkerContent(
                     "user.ftl",
-                    mapOf("user" to user, "pageUser" to pageUser, "kweets" to posts),
+                    mapOf("user" to user, "pageUser" to pageUser, "posts" to posts),
                     etag
                 )
             )

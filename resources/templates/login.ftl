@@ -4,20 +4,22 @@
 <#import "template.ftl" as layout />
 
 <@layout.mainLayout title="Welcome">
-<form class="pure-form-stacked" action="/login" method="post" enctype="application/x-www-form-urlencoded">
-    <#if error??>
-        <p class="error">${error}</p>
-    </#if>
-
-    <label for="userId">Login
-        <input type="text" name="userId" id="userId" value="${userId}">
-    </label>
-
-
-    <label for="password">Password
-        <input type="password" name="password" id="password">
-    </label>
-
-    <input class="pure-button pure-button-primary" type="submit" value="Login">
-</form>
+    <div class="bro">
+        <form action="/login" method="post" enctype="application/x-www-form-urlencoded">
+            <ul>
+                <li>
+                    <label for="userId">Username:</label>
+                    <input type="text" id="userId" name="userId" value="${userId}">
+                </li>
+                <li>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password">
+                </li>
+            </ul>
+            <input type="submit" value="Register">
+        </form>
+        <#if error??>
+            <p class="alert">${error}</p>
+        </#if>
+    </div>
 </@layout.mainLayout>

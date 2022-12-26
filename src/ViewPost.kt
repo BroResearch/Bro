@@ -29,7 +29,7 @@ fun Route.viewPost(dao: DAOFacade, hashFunction: (String) -> String) {
         call.respond(
             FreeMarkerContent(
                 "view-post.ftl",
-                mapOf("user" to user, "kweet" to dao.getPost(it.id), "date" to date, "code" to code),
+                mapOf("user" to user, "post" to dao.getPost(it.id), "date" to date, "code" to code),
                 user?.userId ?: ""
             )
         )

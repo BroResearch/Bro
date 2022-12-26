@@ -22,19 +22,19 @@ fun Route.index(dao: DAOFacade) {
         val user = call.sessions.get<BroSession>()?.let { dao.user(it.userId) }
 
         // Obtains several lists of posts using different sorting and filters.
-        val top = dao.top(10).map { dao.getPost(it) }
-        val latest = dao.latest(10).map { dao.getPost(it) }
+//        val top = dao.top(10).map { dao.getPost(it) }
+        val posts = dao.latest(10).map { dao.getPost(it) }
 
         // Generates an ETag unique string for this route that will be used for caching.
         val etagString =
-            user?.userId + "," + top.joinToString { it.id.toString() } + latest.joinToString { it.id.toString() }
+            user?.userId + "," + posts.joinToString { it.id.toString() }
         val etag = etagString.hashCode()
 
         // Uses FreeMarker to render the page.
         call.respond(
             FreeMarkerContent(
                 "index.ftl",
-                mapOf("top" to top, "latest" to latest, "user" to user),
+                mapOf("posts" to posts, "user" to user),
                 etag.toString()
             )
         )

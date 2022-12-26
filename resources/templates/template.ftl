@@ -1,69 +1,59 @@
 <#-- @ftlvariable name="user" type="model.User" -->
 
 <#macro mainLayout title="Welcome">
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-    <title>${title} | Kweet</title>
-    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
-    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
-    <link rel="stylesheet" type="text/css" href="/styles/main.css">
-</head>
-<body>
-<div class="pure-g">
-    <div class="sidebar pure-u-1 pure-u-md-1-4">
-        <div class="header">
-            <div class="brand-title">Kweet</div>
-            <nav class="nav">
-                <ul class="nav-list">
-                    <li class="nav-item"><a class="pure-button" href="/">homepage</a></li>
-                    <#if user??>
-                        <li class="nav-item"><a class="pure-button" href="/user/${user.userId}">my timeline</a></li>
-                        <li class="nav-item"><a class="pure-button" href="/post-new">New kweet</a></li>
-                        <li class="nav-item"><a class="pure-button" href="/logout">sign out
-                            [${user.displayName?has_content?then(user.displayName, user.userId)}]</a></li>
-                    <#else>
-                        <li class="nav-item"><a class="pure-button" href="/register">sign up</a></li>
-                        <li class="nav-item"><a class="pure-button" href="/login">sign in</a></li>
-                    </#if>
-                </ul>
-            </nav>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Bro?</title>
+        <link rel="stylesheet" href="/styles/main.css" />
+    </head>
+    <body>
+    <nav>
+        <div class="nav-left">
+            <img src="./icontitle.png" alt="Logo">
         </div>
-    </div>
 
-    <div class="content pure-u-1 pure-u-md-3-4">
-        <h2>${title}</h2>
-        <#nested />
+        <div class="nav-middle">
+            <a href="/" class="active">Homepage</a>
+        </div>
+
+        <div class="nav-right">
+            <#if user??>
+                <a href="/post-new"><button>New Post</button></a>
+                <img class="profile" src="./icon.png">
+            <#else>
+                <a href="/login"><button class="login">Log in</button></a>
+                <a href="/register"><button class="register">Register</button></a>
+            </#if>
+        </div>
+    </nav>
+
+    <#nested />
+
     </div>
-    <div class="footer">
-        Kweet ktor example, ${.now?string("yyyy")}
-    </div>
-</div>
-</body>
-</html>
+    </body>
+    </html>
 </#macro>
 
-<#macro kweet_li kweet>
-<#-- @ftlvariable name="kweet" type="model.Post" -->
-<section class="post">
-    <header class="post-header">
-        <img src="/uploads/${kweet.image}" alt="${kweet.id} img">
-        <p class="post-meta">
-            <a href="/post/${kweet.id}">${kweet.date.toDate()?string("yyyy.MM.dd HH:mm:ss")}</a>
-            by <a href="/user/${kweet.userId}">${kweet.userId}</a></p>
-    </header>
-    <div class="post-description">${kweet.text}</div>
-</section>
+<#macro post_li post>
+<#-- @ftlvariable name="post" type="model.Post" -->
+    <div class="bro">
+        <p class="text">${post.text}</p>
+        <img src="/uploads/${post.image}" alt="${post.id} img">
+        <p class="author">
+            <a href="/post/${post.id}">${post.date.toDate()?string("yyyy.MM.dd HH:mm:ss")}</a>
+            by <a href="/user/${post.userId}">${post.userId}</a></p>
+    </div>
 </#macro>
 
-<#macro kweets_list kweets>
+<#macro posts_list posts>
 <ul>
-    <#list kweets as kweet>
-        <@kweet_li kweet=kweet></@kweet_li>
+    <#list posts as post>
+        <@post_li post=post></@post_li>
     <#else>
-        <li>There are no kweets yet</li>
+        <li>There are no posts yet</li>
     </#list>
 </ul>
 </#macro>
