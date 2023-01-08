@@ -1,3 +1,6 @@
+package routing
+
+import BroSession
 import dao.DAOFacade
 import io.ktor.resources.*
 import model.Post
@@ -8,6 +11,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import kotlinx.serialization.Serializable
+import securityCode
 
 @Serializable
 @Resource("/post/{id}")

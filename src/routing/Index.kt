@@ -1,3 +1,6 @@
+package routing
+
+import BroSession
 import dao.DAOFacade
 import io.ktor.resources.*
 import io.ktor.server.application.*

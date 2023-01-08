@@ -1,3 +1,5 @@
+package routing
+
 import io.ktor.resources.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
@@ -15,7 +17,7 @@ class MainCss
  */
 fun Route.styles() {
     /**
-     * On a GET request to the [MainCss] route, it returns the `blog.css` file from the resources.
+     * On a GET request to the [MainCss] route, it returns the `style.css` file from the resources.
      *
      * Here we could preprocess or join several CSS/SASS/LESS.
      */
