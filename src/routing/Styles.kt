@@ -22,6 +22,6 @@ fun Route.styles() {
      * Here we could preprocess or join several CSS/SASS/LESS.
      */
     get<MainCss> {
-        call.respond(call.resolveResource("blog.css")!!)
+        call.respond(call.resolveResource("style.css")!!)
     }
 }

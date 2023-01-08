@@ -126,6 +126,7 @@ fun Application.mainWithDependencies(dao: DAOFacade) {
     // They are split in several methods and files, so it can scale for larger
     // applications keeping a reasonable number of lines per file.
     routing {
+        scripts()
         styles()
         uploads()
         index(dao)
