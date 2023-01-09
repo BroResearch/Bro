@@ -16,7 +16,7 @@
                 </div>
             </a>
             <h1 class="mt-6 text-4xl font-bold tracking-tight underline decoration-purple text-foreground sm:text-5xl">
-                ${post.id}</h1>
+                ${post.first.title}</h1>
         </header>
         <div class="mt-8 prose text-foreground">
             <p class="pb-10 text-lg">${post.first.text}</p>

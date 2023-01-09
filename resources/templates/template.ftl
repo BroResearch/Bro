@@ -229,7 +229,33 @@
     <#list posts as post>
         <@post_li post=post></@post_li>
     <#else>
-        <li>There are no posts yet</li>
+        <div x-data="{ isClosed: false }" :class="{'hidden': isClosed, '': !isClosed }" class="bg-red rounded">
+            <div class="mx-auto max-w-7xl py-3 px-3 sm:px-6 lg:px-8">
+                <div class="flex flex-wrap items-center justify-between">
+                    <div class="flex w-0 flex-1 items-center">
+                      <span class="flex rounded-lg bg-orange p-2">
+                        <!-- Heroicon name: outline/exclamation-circle -->
+                            <svg class="h-6 w-6 text-background" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                            </svg>
+                      </span>
+                        <p class="ml-3 truncate font-medium text-background">
+                            <span class="md:hidden">There are no posts yet</span>
+                            <span class="hidden md:inline">There are no posts yet</span>
+                        </p>
+                    </div>
+                    <div class="order-2 flex-shrink-0 sm:order-3 sm:ml-3">
+                        <button @click="isClosed = !isClosed" type="button" class="-mr-1 flex rounded-md p-2 hover:bg-orange focus:outline-none focus:ring-2 focus:ring-background sm:-mr-2">
+                            <span class="sr-only">Dismiss</span>
+                            <!-- Heroicon name: outline/x-mark -->
+                            <svg class="h-6 w-6 text-background" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </#list>
 </ul>
 </#macro>
