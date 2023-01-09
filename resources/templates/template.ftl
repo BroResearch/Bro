@@ -85,11 +85,11 @@
                     <div x-data="{ isOpen: false }" class="relative ml-3">
                         <div>
                             <button @click="isOpen = !isOpen" type="button"
-                                    class="flex rounded-full bg-green text-sm focus:outline-none focus:ring-2 focus:ring-purple "
+                                    class="flex rounded-full bg-purple text-sm focus:outline-none focus:ring-2 focus:ring-purple "
                                     id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                                 <span class="sr-only">Open user menu</span>
                                 <img class="h-8 w-8 rounded-full"
-                                     src="uploads/${user.userId}"
+                                     src="uploads/${user.profilePic}"
                                      alt="" />
                             </button>
                         </div>
@@ -194,29 +194,29 @@
 </#macro>
 
 <#macro post_li post>
-<#-- @ftlvariable name="post" type="model.Post" -->
+<#-- @ftlvariable name="post" type="kotlin.Pair<model.Post,String>" -->
     <section class="w-full px-4 py-6 mx-auto max-w-7xl md:w-4/5">
         <div class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 bg-background rounded">
             <div class="col-span-1 md:col-span-2 lg:col-span-2 xl:col-span-3 overflow-hidden">
-                <a href="/post/${post.id}">
-                    <img src="/uploads/${post.image}"
+                <a href="/post/${post.first.id}">
+                    <img src="/uploads/${post.first.image}"
                          class="rounded-t object-cover w-full h-64 mb-5 bg-center hover:scale-105 transition-all duration-200 ease-in-out"
-                         alt="${post.id} img" loading="lazy" />
+                         alt="${post.first.id} img" loading="lazy" />
                 </a>
                 <p class="mb-2 text-xs font-semibold tracking-wider text-yellow uppercase"></p>
                 <h2 class="mb-2 text-xl font-bold leading-snug text-foreground pl-3 pr-1">
-                    <a href="/post/${post.id}" class="text-foreground hover:text-pink">${post.id}</a>
+                    <a href="/post/${post.first.id}" class="text-foreground hover:text-pink">${post.first.title}</a>
                 </h2>
-                <p class="mb-4 text-sm font-normal text-foreground p-3">
-                    ${post.text}
-                </p>
-                <a class="flex items-center pl-3 pb-3" href="/user/${post.userId}">
+                <span maxlength="20" class="mb-4 text-sm font-normal text-foreground p-3">
+                    ${post.first.text}
+                </span>
+                <a class="flex items-center pl-3 pb-3" href="/user/${post.first.userId}">
                     <div class="inline-block h-12 w-12 rounded-full ring-2s ring-cyan">
-                        <img src="/uploads/${post.userId}" alt="Photo of Praveen Juge" />
+                        <img src="/uploads/${post.second}" alt="Photo of ${post.first.userId}" />
                     </div>
                     <div class="ml-2">
-                        <p class="text-sm font-semibold text-foreground hover:text-cyan">${post.userId}</p>
-                        <p class="text-sm text-cyan">${post.date.toDate()?string("yyyy.MM.dd HH:mm:ss")}</p>
+                        <p class="text-sm font-semibold text-foreground hover:text-cyan">${post.first.userId}</p>
+                        <p class="text-sm text-cyan">${post.first.date.toDate()?string("yyyy.MM.dd HH:mm:ss")}</p>
                     </div>
                 </a>
             </div>

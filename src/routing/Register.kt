@@ -23,6 +23,7 @@ data class Register(
     val userId: String = "",
     val displayName: String = "",
     val email: String = "",
+    val profilePic: String = "",
     val error: String = ""
 )
 /**
@@ -50,9 +51,10 @@ fun Route.register(dao: DAOFacade, hashFunction: (String) -> String) {
         val password = registration["password"] ?: return@post call.redirect(it)
         val displayName = registration["displayName"] ?: return@post call.redirect(it)
         val email = registration["email"] ?: return@post call.redirect(it)
+        val profilePic = "defaultProfile.png"
 
         // prepare location class for error if any
-        val error = Register(userId, displayName, email)
+        val error = Register(userId, displayName, email, profilePic)
 
         when {
             password.length < 6 -> call.redirect(error.copy(error = "Password should be at least 6 characters long"))
@@ -61,7 +63,7 @@ fun Route.register(dao: DAOFacade, hashFunction: (String) -> String) {
             dao.user(userId) != null -> call.redirect(error.copy(error = "User with the following login is already registered"))
             else -> {
                 val hash = hashFunction(password)
-                val newUser = User(userId, email, displayName, hash)
+                val newUser = User(userId, email, displayName, profilePic,hash)
 
                 try {
                     dao.createUser(newUser)
@@ -96,7 +98,7 @@ fun Route.register(dao: DAOFacade, hashFunction: (String) -> String) {
             call.respond(
                 FreeMarkerContent(
                     "register.ftl",
-                    mapOf("pageUser" to User(it.userId, it.email, it.displayName, ""), "error" to it.error),
+                    mapOf("pageUser" to User(it.userId, it.email, it.displayName, it.profilePic,""), "error" to it.error),
                     ""
                 )
             )

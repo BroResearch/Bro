@@ -11,6 +11,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import kotlinx.serialization.Serializable
+import model.Post
 
 @Serializable
 @Resource("/user/{user}")
@@ -32,8 +33,10 @@ fun Route.userPage(dao: DAOFacade) {
         if (pageUser == null) {
             call.respond(HttpStatusCode.NotFound.description("User ${it.user} doesn't exist"))
         } else {
-            val posts = dao.userPosts(it.user).map { dao.getPost(it) }
-            val etag = (user?.userId ?: "") + "_" + posts.map { it.text.hashCode() }.hashCode().toString()
+            val posts: List<Pair<Post,String>> = dao.userPosts(it.user).map { dao.getPost(it) }
+                .map { Pair(it,dao.getUserPic(it.userId)) }
+
+            val etag = (user?.userId ?: "") + "_" + posts.map { it.first.text.hashCode() }.hashCode().toString()
 
             call.respond(
                 FreeMarkerContent(

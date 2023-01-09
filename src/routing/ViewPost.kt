@@ -30,10 +30,14 @@ fun Route.viewPost(dao: DAOFacade, hashFunction: (String) -> String) {
         val date = System.currentTimeMillis()
         val code = if (user != null) call.securityCode(date, user, hashFunction) else null
 
+        val post = with(dao.getPost(it.id)) {
+            Pair(this,dao.getUserPic(this.userId))
+        }
+
         call.respond(
             FreeMarkerContent(
                 "view-post.ftl",
-                mapOf("user" to user, "post" to dao.getPost(it.id), "date" to date, "code" to code),
+                mapOf("user" to user, "post" to post, "date" to date, "code" to code),
                 user?.userId ?: ""
             )
         )

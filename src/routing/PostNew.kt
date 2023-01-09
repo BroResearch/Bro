@@ -66,6 +66,7 @@ fun Route.postNew(dao: DAOFacade, hashFunction: (String) -> String) {
 
         var date: Long = 0
         var code: String = ""
+        var title: String = ""
         var text: String = ""
         var fileName: String = ""
         val multipartData = call.receiveMultipart()
@@ -75,6 +76,7 @@ fun Route.postNew(dao: DAOFacade, hashFunction: (String) -> String) {
                 is PartData.FormItem -> {
                     when (part.name){
                         "date" -> date = part.value.toLong()
+                        "title" -> title = part.value
                         "code" -> code = part.value
                         "text" -> text = part.value
                     }
@@ -95,7 +97,7 @@ fun Route.postNew(dao: DAOFacade, hashFunction: (String) -> String) {
         if (user == null || !call.verifyCode(date, user, code, hashFunction)) {
             call.redirect(Login())
         } else {
-            val id = dao.createPost(user.userId, text, fileName)
+            val id = dao.createPost(user.userId, title, text, fileName)
             call.redirect(ViewPost(id))
         }
     }

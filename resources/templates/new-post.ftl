@@ -19,7 +19,7 @@
                             <div>
                                 <label for="post-text" class="block text-sm font-medium underline decoration-purple text-foreground">Body</label>
                                 <div class="mt-1">
-                                    <textarea id="post-text" name="text" rows="3" class="mt-1 block w-full rounded-md shadow-sm focus:border-purple focus:ring-purple sm:text-sm" placeholder="My Body"></textarea>
+                                    <textarea id="post-text" name="text" rows="3" maxlength="1024" class="mt-1 block w-full rounded-md shadow-sm focus:border-purple focus:ring-purple sm:text-sm" placeholder="My Body"></textarea>
                                 </div>
                             </div>
 
