@@ -134,10 +134,6 @@ class DAOFacadeCache(private val delegate: DAOFacade, private val storagePath: F
         return delegate.latest(count)
     }
 
-    override fun getUserPic(userId: String): String {
-        return delegate.getUserPic(userId)
-    }
-
     override fun editUser(user: User): Boolean {
         return delegate.editUser(user)
     }

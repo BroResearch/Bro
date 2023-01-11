@@ -31,7 +31,7 @@ fun Route.viewPost(dao: DAOFacade, hashFunction: (String) -> String) {
         val code = if (user != null) call.securityCode(date, user, hashFunction) else null
 
         val post = with(dao.getPost(it.id)) {
-            Pair(this,dao.getUserPic(this.userId))
+            Pair(this,dao.user(this.userId))
         }
 
         call.respond(

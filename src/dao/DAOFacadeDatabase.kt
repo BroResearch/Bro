@@ -71,11 +71,6 @@ interface DAOFacade : Closeable {
      */
     fun latest(count: Int = 10): List<Int>
 
-    /**
-     * Returns a String containing [Users.profilePic]
-     */
-    fun getUserPic(userId: String): String
-
     fun editUser(user: User): Boolean
 }
 
@@ -197,10 +192,6 @@ class DAOFacadeDatabase(
         }
 
         emptyList()
-    }
-
-    override fun getUserPic(userId: String): String = transaction(db) {
-        Users.select { Users.id.eq(userId) }.map { it[Users.profilePic] }.single()
     }
 
     override fun editUser(user: User): Boolean = transaction(db) {

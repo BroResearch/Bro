@@ -194,7 +194,7 @@
 </#macro>
 
 <#macro post_li post>
-<#-- @ftlvariable name="post" type="kotlin.Pair<model.Post,String>" -->
+<#-- @ftlvariable name="post" type="kotlin.Pair<model.Post,model.User>" -->
     <section class="w-full px-4 py-6 mx-auto max-w-7xl md:w-4/5">
         <div class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 bg-background rounded">
             <div class="col-span-1 md:col-span-2 lg:col-span-2 xl:col-span-3 overflow-hidden">
@@ -207,15 +207,15 @@
                 <h2 class="mb-2 text-xl font-bold leading-snug text-foreground pl-3 pr-1">
                     <a href="/post/${post.first.id}" class="text-foreground hover:text-pink">${post.first.title}</a>
                 </h2>
-                <span maxlength="20" class="mb-4 text-sm font-normal text-foreground p-3">
+                <span class="mb-4 text-sm font-normal text-foreground p-3">
                     ${post.first.text}
                 </span>
                 <a class="flex items-center pl-3 pb-3" href="/user/${post.first.userId}">
                     <div class="inline-block h-12 w-12 rounded-full ring-2s ring-cyan">
-                        <img src="/uploads/${post.second}" alt="Photo of ${post.first.userId}" />
+                        <img src="/uploads/${post.second.profilePic}" alt="Photo of ${post.first.userId}" />
                     </div>
                     <div class="ml-2">
-                        <p class="text-sm font-semibold text-foreground hover:text-cyan">${post.first.userId}</p>
+                        <p class="text-sm font-semibold text-foreground hover:text-cyan">${post.second.displayName}</p>
                         <p class="text-sm text-cyan">${post.first.date.toDate()?string("yyyy.MM.dd HH:mm:ss")}</p>
                     </div>
                 </a>

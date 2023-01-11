@@ -1,17 +1,17 @@
 <#-- @ftlvariable name="date" type="java.lang.Long" -->
 <#-- @ftlvariable name="code" type="java.lang.String" -->
-<#-- @ftlvariable name="post" type="kotlin.Pair<model.Post,java.lang.String>" -->
+<#-- @ftlvariable name="post" type="kotlin.Pair<model.Post,model.User>" -->
 <#import "template.ftl" as layout />
 
 <@layout.mainLayout title="New post">
     <article>
         <header class="flex flex-col">
-            <a class="flex items-center" href="/post/${post.first.id}" >
+            <a class="flex items-center" href="/user/${post.first.userId}" >
                 <div class="inline-block h-12 w-12 rounded-full ring-2s ring-cyan">
-                    <img class="h-full w-full" src="/uploads/${post.second}" alt="Photo of ${post.first.userId}" />
+                    <img class="h-full w-full" src="/uploads/${post.second.profilePic}" alt="Photo of ${post.first.userId}" />
                 </div>
                 <div class="ml-2">
-                    <p class="text-sm font-semibold text-foreground hover:text-cyan">${post.first.userId}</p>
+                    <p class="text-sm font-semibold text-foreground hover:text-cyan">${post.second.displayName}</p>
                     <p class="text-sm text-cyan">${post.first.date.toDate()?string("yyyy.MM.dd HH:mm:ss")}</p>
                 </div>
             </a>

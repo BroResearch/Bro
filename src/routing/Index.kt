@@ -11,6 +11,7 @@ import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import kotlinx.serialization.Serializable
 import model.Post
+import model.User
 
 @Serializable
 @Resource("/")
@@ -27,9 +28,9 @@ fun Route.index(dao: DAOFacade) {
 
         // Obtains several lists of posts using different sorting and filters.
 //        val top = dao.top(10).map { dao.getPost(it) }
-        val posts: List<Pair<Post,String>> = dao.latest(10).map { dao.getPost(it) }
+        val posts: List<Pair<Post,User?>> = dao.latest(10).map { dao.getPost(it) }
             // Pair each post to the user's profile picture
-            .map { Pair(it,dao.getUserPic(it.userId)) }
+            .map { Pair(it,dao.user(it.userId)) }
 
 
 

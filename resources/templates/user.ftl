@@ -1,5 +1,5 @@
 <#-- @ftlvariable name="pageUser" type="model.User" -->
-<#-- @ftlvariable name="posts" type="java.util.List<kotlin.Pair<model.Post,java.lang.String>>" -->
+<#-- @ftlvariable name="posts" type="java.util.List<kotlin.Pair<model.Post,model.User>>" -->
 
 <#import "template.ftl" as layout />
 
