@@ -47,6 +47,8 @@ dependencies {
     implementation("io.ktor:ktor-server-default-headers")
     implementation("io.ktor:ktor-server-partial-content")
     implementation("io.ktor:ktor-server-call-logging")
+    implementation("io.ktor:ktor-server-content-negotiation")
+    implementation("io.ktor:ktor-serialization-kotlinx-json")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("com.h2database:h2:$h2_version")
     implementation("com.mchange:c3p0:0.9.5.5")

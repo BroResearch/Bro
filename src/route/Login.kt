@@ -1,6 +1,6 @@
-package routing
+package route
 
-import BroSession
+import plugin.BroSession
 import dao.DAOFacade
 import io.ktor.http.*
 import io.ktor.resources.*
@@ -13,8 +13,8 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import kotlinx.serialization.Serializable
-import redirect
-import userNameValid
+import plugin.redirect
+import plugin.userNameValid
 
 @Serializable
 @Resource("/login")

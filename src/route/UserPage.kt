@@ -1,6 +1,6 @@
-package routing
+package route
 
-import BroSession
+import plugin.BroSession
 import dao.DAOFacade
 import io.ktor.http.*
 import io.ktor.resources.*

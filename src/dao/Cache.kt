@@ -126,6 +126,14 @@ class DAOFacadeCache(private val delegate: DAOFacade, private val storagePath: F
         usersCache.put(user.userId, user)
     }
 
+    override fun allPosts(): List<Post> {
+        return delegate.allPosts()
+    }
+
+    override fun allUsers(): List<User> {
+        return delegate.allUsers()
+    }
+
     override fun top(count: Int): List<Int> {
         return delegate.top(count)
     }
@@ -134,8 +142,8 @@ class DAOFacadeCache(private val delegate: DAOFacade, private val storagePath: F
         return delegate.latest(count)
     }
 
-    override fun editUser(user: User): Boolean {
-        return delegate.editUser(user)
+    override fun editUser(user: String, email: String, displayName: String, profilePic: String): Boolean {
+        return delegate.editUser(user, email, displayName, profilePic)
     }
 
     override fun close() {

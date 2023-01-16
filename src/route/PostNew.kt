@@ -1,6 +1,6 @@
-package routing
+package route
 
-import BroSession
+import plugin.BroSession
 import dao.DAOFacade
 import model.Post
 import io.ktor.http.content.*
@@ -14,9 +14,9 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import kotlinx.serialization.Serializable
-import redirect
-import securityCode
-import verifyCode
+import plugin.redirect
+import plugin.securityCode
+import plugin.verifyCode
 import java.io.File
 
 @Serializable

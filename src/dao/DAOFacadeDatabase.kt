@@ -62,6 +62,17 @@ interface DAOFacade : Closeable {
     fun createUser(user: User)
 
     /**
+     * Returns a list of all Posts
+     */
+    fun allPosts(): List<Post>
+
+
+    /**
+     * Returns a list of all Users
+     */
+    fun allUsers(): List<User>
+
+    /**
      * Returns a list of Post ids, with the ones with most replies first.
      */
     fun top(count: Int = 10): List<Int>
@@ -71,7 +82,7 @@ interface DAOFacade : Closeable {
      */
     fun latest(count: Int = 10): List<Int>
 
-    fun editUser(user: User): Boolean
+    fun editUser(user: String, email: String, displayName: String, profilePic: String): Boolean
 }
 
 /**
@@ -150,6 +161,18 @@ class DAOFacadeDatabase(
         Unit
     }
 
+    override fun allPosts(): List<Post> = transaction(db) {
+        Posts.selectAll().map {
+            Post(it[Posts.id],it[Posts.user],it[Posts.date],it[Posts.title],it[Posts.text],it[Posts.image])
+        }
+    }
+
+    override fun allUsers(): List<User> = transaction(db) {
+        Users.selectAll().map {
+            User(it[Users.id], it[Users.email], it[Users.displayName], it[Users.profilePic], it[Users.passwordHash])
+        }
+    }
+
     override fun top(count: Int): List<Int> = transaction(db) {
         // note: In a real application, you shouldn't do it like this
         //   as it may cause database outages on big data
@@ -194,8 +217,8 @@ class DAOFacadeDatabase(
         emptyList()
     }
 
-    override fun editUser(user: User): Boolean = transaction(db) {
-        Users.update({ Users.id.eq(user.userId) }){
+    override fun editUser(user: String, email: String, displayName: String, profilePic: String): Boolean = transaction(db) {
+        Users.update({Users.id.eq(user)}) {
             it[Users.email] = email
             it[Users.displayName] = displayName
             it[Users.profilePic] = profilePic

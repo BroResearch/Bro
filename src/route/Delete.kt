@@ -1,6 +1,5 @@
-package routing
+package route
 
-import BroSession
 import dao.DAOFacade
 import io.ktor.http.*
 import io.ktor.resources.*
@@ -10,8 +9,9 @@ import io.ktor.server.request.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import kotlinx.serialization.Serializable
-import redirect
-import verifyCode
+import plugin.BroSession
+import plugin.redirect
+import plugin.verifyCode
 
 @Serializable
 @Resource("/post/{id}/delete")
@@ -21,7 +21,7 @@ class PostDelete(val id: Int)
  * Registers a route for deleting deleting posts.
  */
 fun Route.delete(dao: DAOFacade, hashFunction: (String) -> String) {
-    // Uses the Resources plugin to register a 'post' route for '/kweet/{id}/delete'.
+    // Uses the Resources plugin to register a 'post' route for '/post/{id}/delete'.
     post<PostDelete> { it ->
         // Tries to get (null on failure) the user associated to the current PostSession
         val user = call.sessions.get<BroSession>()?.let { dao.user(it.userId) }
