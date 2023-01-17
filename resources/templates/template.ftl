@@ -113,7 +113,7 @@
                             <!-- Active: "bg-gray-100", Not Active: "" -->
                             <a href="/user/${user.userId}" class="block px-4 py-2 text-sm text-foreground hover:text-purple" role="menuitem"
                                tabindex="-1" id="user-menu-item-0">Your Profile</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-foreground hover:text-purple" role="menuitem"
+                            <a href="/user/${user.userId}/edit" class="block px-4 py-2 text-sm text-foreground hover:text-purple" role="menuitem"
                                tabindex="-1" id="user-menu-item-1">Settings</a>
                             <a href="/logout" class="block px-4 py-2 text-sm text-foreground hover:text-purple" role="menuitem"
                                tabindex="-1" id="user-menu-item-2">Sign out</a>

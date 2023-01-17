@@ -4,6 +4,7 @@
 <#import "template.ftl" as layout />
 
 <@layout.mainLayout title="New post">
+    <div class="mx-auto max-w-7xl py-6 px-10 sm:px-8 lg:px-8">
     <article>
         <header class="flex flex-col">
             <a class="flex items-center" href="/user/${post.first.userId}" >
@@ -30,4 +31,5 @@
         </form>
         </#if>
     </article>
+    </div>
 </@layout.mainLayout>
