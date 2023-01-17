@@ -42,7 +42,7 @@ fun Route.editUser(dao: DAOFacade, hashFunction: (String) -> String) {
             )
         }
     }
-    post<EditUser> {
+    post<EditUser> { it ->
 
         val user = call.sessions.get<BroSession>()?.let { dao.user(it.userId) }
 
@@ -79,11 +79,11 @@ fun Route.editUser(dao: DAOFacade, hashFunction: (String) -> String) {
         }
 
         if (user == null || !call.verifyCode(date, user, code, hashFunction)) {
-            call.redirect(Login())
+            call.redirect(UserPage(it.user))
         } else {
             File("uploads/$profilePic").writeBytes(fileBytes)
-            dao.editUser(user.userId,email,displayName,profilePic)
-            call.redirect(UserPage(user.userId))
+            dao.editUser(it.user,email,displayName,profilePic)
+            call.redirect(UserPage(it.user))
         }
     }
 

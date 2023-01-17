@@ -38,6 +38,15 @@ repositories {
     mavenCentral()
 }
 
+val osName = System.getProperty("os.name").toLowerCase()
+val tcnative_version = "2.0.54.Final"
+val tcnative_classifier = when {
+    osName.contains("win") -> "windows-x86_64"
+    osName.contains("linux") -> "linux-x86_64"
+    osName.contains("mac") -> "osx-x86_64"
+    else -> null
+}
+
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("io.ktor:ktor-server-freemarker")
@@ -63,4 +72,9 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.2")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("io.ktor:ktor-server-test-host-jvm")
+    if (tcnative_classifier != null) {
+        implementation("io.netty:netty-tcnative-boringssl-static:$tcnative_version:$tcnative_classifier")
+    } else {
+        implementation("io.netty:netty-tcnative-boringssl-static:$tcnative_version")
+    }
 }
