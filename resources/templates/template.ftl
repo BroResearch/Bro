@@ -62,7 +62,7 @@
                             <a href="/team"
                                class="text-foreground hover:bg-currentLine hover:text-purple px-3 py-2 rounded-md text-sm font-medium">Team</a>
 
-                            <a href="#"
+                            <a href="/docs/api"
                                class="text-foreground hover:bg-currentLine hover:text-purple px-3 py-2 rounded-md text-sm font-medium">API
                                 docs</a>
                         </div>
@@ -142,7 +142,7 @@
                 <a href="/team"
                    class="text-foreground hover:bg-currentLine hover:text-purple block px-3 py-2 rounded-md text-base font-medium">Team</a>
 
-                <a href="#"
+                <a href="/docs/api"
                    class="text-foreground hover:bg-currentLine hover:text-purple block px-3 py-2 rounded-md text-base font-medium">API
                     docs</a>
             </div>
@@ -159,7 +159,7 @@
                 <a href="/team"
                    class="text-foreground hover:bg-currentLine hover:text-purple block px-3 py-2 rounded-md text-base font-medium">Team</a>
 
-                <a href="#"
+                <a href="/docs/api"
                    class="text-foreground hover:bg-currentLine hover:text-purple block px-3 py-2 rounded-md text-base font-medium">API
                     docs</a>
             </div>
