@@ -68,6 +68,8 @@ fun Application.mainWithDependencies(dao: DAOFacade) {
         scripts()
         styles()
         uploads()
+        apiDocsPage(dao)
+        teamPage(dao)
         index(dao)
         postNew(dao, hashFunction)
         delete(dao, hashFunction)

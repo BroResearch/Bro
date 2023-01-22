@@ -10,7 +10,7 @@ import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
 
 @Serializable
-@Resource("/posts")
+@Resource("/v1/posts")
 class PostsRoutes{
     @Serializable
     @Resource("{id}")
@@ -25,10 +25,10 @@ fun Route.postsRouting(dao: DAOFacade) {
     }
 
     get<PostsRoutes.Id> {
-        val post = dao.getPost(it.id) ?: return@get call.respondText(
+        val post = dao.getPost(it.id)
+        if (post.equals(null)) return@get call.respondText(
             "No post with id ${it.id}",
             status = HttpStatusCode.NotFound
-        )
-        call.respond(post)
+        ) else call.respond(post)
     }
 }

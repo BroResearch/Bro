@@ -59,7 +59,7 @@
                             <a href="/"
                                class="text-foreground hover:bg-currentLine hover:text-purple px-3 py-2 rounded-md text-sm font-medium">Homepage</a>
 
-                            <a href="#"
+                            <a href="/team"
                                class="text-foreground hover:bg-currentLine hover:text-purple px-3 py-2 rounded-md text-sm font-medium">Team</a>
 
                             <a href="#"
@@ -139,7 +139,7 @@
                 <a href="/"
                    class="text-foreground hover:bg-currentLine hover:text-purple block px-3 py-2 rounded-md text-base font-medium">Homepage</a>
 
-                <a href="#"
+                <a href="/team"
                    class="text-foreground hover:bg-currentLine hover:text-purple block px-3 py-2 rounded-md text-base font-medium">Team</a>
 
                 <a href="#"
@@ -156,7 +156,7 @@
                 <a href="/"
                    class="text-foreground hover:bg-currentLine hover:text-purple block px-3 py-2 rounded-md text-base font-medium">Homepage</a>
 
-                <a href="#"
+                <a href="/team"
                    class="text-foreground hover:bg-currentLine hover:text-purple block px-3 py-2 rounded-md text-base font-medium">Team</a>
 
                 <a href="#"
@@ -175,11 +175,6 @@
 
     </nav>
 
-    <header class="bg-currentLine shadow">
-        <div class="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8">
-            <h1 class="text-3xl font-bold tracking-tight text-pink align">${title}</h1>
-        </div>
-    </header>
     <main>
         <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
             <!-- Replace with your content -->

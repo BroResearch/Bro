@@ -10,7 +10,7 @@ import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
 
 @Serializable
-@Resource("/users")
+@Resource("/v1/users")
 class UsersRoutes{
     @Serializable
     @Resource("{user}")
