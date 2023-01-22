@@ -10,56 +10,52 @@ import model.Post
 import model.User
 import org.joda.time.*
 import org.junit.Test
+import plugin.hash
+import plugin.mainWithDependencies
 import kotlin.test.*
 
 /**
  * Integration tests for the [main] module.
  */
-class PostApplicationTest {
+class BroApplicationTest {
     /**
      * A [mockk] instance of the [DAOFacade] to used to verify and mock calls on the integration tests.
      */
-    val dao = mockk<DAOFacade>(relaxed = true)
+    private val dao: DAOFacade = mockk(relaxed = true)
 
     /**
      * Specifies a fixed date for testing.
      */
-    val date = DateTime.parse("2010-01-01T00:00+00:00")
+    private val date: DateTime = DateTime.parse("2010-01-01T00:00+00:00")
 
     @Test
     fun testEmptyHome() = testApplication {
         setupApp()
 
-        every { dao.top() } returns listOf()
         every { dao.latest() } returns listOf()
 
         client.get("/").apply {
             assertEquals(200, status.value)
-            assertTrue(bodyAsText().contains("There are no kweets yet"))
+            assertTrue(bodyAsText().contains("There are no posts yet"))
         }
 
-        verify(exactly = 1) { dao.top() }
         verify(exactly = 1) { dao.latest() }
     }
 
     @Test
-    fun testHomeWithSomeKweets() = testApplication {
+    fun testHomeWithSomePosts() = testApplication {
         setupApp()
 
-        every { dao.getPost(1) } returns Post(1, "user1", "text1", date, null)
-        every { dao.getPost(2) } returns Post(2, "user2", "text2", date, null)
-        every { dao.top() } returns listOf(1)
+        every { dao.getPost(1) } returns Post(1, "user1", date, "title1","text1","image1")
+        every { dao.getPost(2) } returns Post(2, "user2", date, "title2","text2","image2")
         every { dao.latest() } returns listOf(2)
 
         client.get("/").apply {
             assertEquals(200, status.value)
-            assertFalse(bodyAsText().contains("There are no kweets yet"))
-            assertTrue(bodyAsText().contains("user1"))
-            assertTrue(bodyAsText().contains("user2"))
+            assertFalse(bodyAsText().contains("There are no posts yet"))
+            assertTrue(bodyAsText().contains("text2"))
         }
 
-        verify(exactly = 2) { dao.getPost(any()) }
-        verify(exactly = 1) { dao.top() }
         verify(exactly = 1) { dao.latest() }
     }
 
@@ -87,7 +83,7 @@ class PostApplicationTest {
 
         val password = "mylongpassword"
         val passwordHash = hash(password)
-        every { dao.user("test1", passwordHash) } returns User("test1", "test1@test.com", "test1", passwordHash)
+        every { dao.user("test1", passwordHash) } returns User("test1", "test1@test.com", "test1","test1", passwordHash)
 
         client.post("/login") {
             header(HttpHeaders.ContentType, ContentType.Application.FormUrlEncoded.toString())

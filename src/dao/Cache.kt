@@ -134,10 +134,6 @@ class DAOFacadeCache(private val delegate: DAOFacade, private val storagePath: F
         return delegate.allUsers()
     }
 
-    override fun top(count: Int): List<Int> {
-        return delegate.top(count)
-    }
-
     override fun latest(count: Int): List<Int> {
         return delegate.latest(count)
     }

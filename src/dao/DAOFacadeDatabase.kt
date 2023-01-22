@@ -73,11 +73,6 @@ interface DAOFacade : Closeable {
     fun allUsers(): List<User>
 
     /**
-     * Returns a list of Post ids, with the ones with most replies first.
-     */
-    fun top(count: Int = 10): List<Int>
-
-    /**
      * Returns a list of Post ids, with the recent ones first.
      */
     fun latest(count: Int = 10): List<Int>
@@ -93,12 +88,6 @@ interface DAOFacade : Closeable {
 class DAOFacadeDatabase(
     private val db: Database = Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")
 ) : DAOFacade {
-    constructor(dir: File) : this(
-        Database.connect(
-            "jdbc:h2:file:${dir.canonicalFile.absolutePath}",
-            driver = "org.h2.Driver"
-        )
-    )
 
     override fun init() {
         // Create the used tables
@@ -171,21 +160,6 @@ class DAOFacadeDatabase(
         Users.selectAll().map {
             User(it[Users.id], it[Users.email], it[Users.displayName], it[Users.profilePic], it[Users.passwordHash])
         }
-    }
-
-    override fun top(count: Int): List<Int> = transaction(db) {
-        // note: In a real application, you shouldn't do it like this
-        //   as it may cause database outages on big data
-        //   so this implementation is just for demo purposes
-
-        val k2 = Posts.alias("k2")
-        Posts.join(k2, JoinType.LEFT, Posts.id, k2[Posts.id])
-            .slice(Posts.id, k2[Posts.id].count())
-            .selectAll()
-            .groupBy(Posts.id)
-            .orderBy(k2[Posts.id].count(), SortOrder.DESC)
-            .limit(count)
-            .map { it[Posts.id] }
     }
 
     override fun latest(count: Int): List<Int> = transaction(db) {

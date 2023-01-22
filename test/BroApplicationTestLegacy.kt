@@ -8,65 +8,64 @@ import model.Post
 import model.User
 import org.joda.time.*
 import org.junit.Test
+import plugin.hash
 import kotlin.test.*
+import route.Index
+import route.UserPage
+import route.Login
+import plugin.mainWithDependencies
 
 /**
  * Integration tests for the module [mainWithDependencies].
  *
  * Uses [testApp] in test methods to simplify the testing.
  */
-class PostApplicationTestLegacy {
+class BroApplicationTestLegacy {
     /**
      * A [mockk] instance of the [DAOFacade] to used to verify and mock calls on the integration tests.
      */
-    val dao = mockk<DAOFacade>(relaxed = true)
+    private val dao: DAOFacade = mockk(relaxed = true)
 
     /**
      * Specifies a fixed date for testing.
      */
-    val date = DateTime.parse("2010-01-01T00:00+00:00")
+    private val date: DateTime = DateTime.parse("2010-01-01T00:00+00:00")
 
     /**
-     * Tests that the [Index] page calls the [DAOFacade.top] and [DAOFacade.latest] methods just once.
-     * And that when no [Posts] are available, it displays "There are no kweets yet" somewhere.
+     * Tests that the [Index] page calls the [DAOFacade.latest] methods just once.
+     * And that when no [Posts] are available, it displays "There are no posts yet" somewhere.
      */
     @Test
     fun testEmptyHome() = testApp {
-        every { dao.top() } returns listOf()
         every { dao.latest() } returns listOf()
 
         handleRequest(HttpMethod.Get, "/").apply {
             assertEquals(200, response.status()?.value)
-            assertTrue(response.content!!.contains("There are no kweets yet"))
+            assertTrue(response.content!!.contains("There are no posts yet"))
         }
 
-        verify(exactly = 1) { dao.top() }
         verify(exactly = 1) { dao.latest() }
     }
 
     /**
-     * Tests that the [Index] page calls the [DAOFacade.top] and [DAOFacade.latest] methods just once.
-     * And that when some Kweets are available there is a call to [DAOFacade.getPost] per provided kweet id
+     * Tests that the [Index] page calls the [DAOFacade.latest] methods just once.
+     * And that when some Posts are available there is a call to [DAOFacade.getPost] per provided post id
      * (the final application will cache with [DAOFacadeCache]).
-     * Ensures that it DOESN'T display "There are no kweets yet" when there are kweets available,
-     * and that the user of the kweets is also displayed.
+     * Ensures that it DOESN'T display "There are no posts yet" when there are posts available,
+     * and that the user of the posts is also displayed.
      */
     @Test
-    fun testHomeWithSomeKweets() = testApp {
-        every { dao.getPost(1) } returns Post(1, "user1", "text1", date, null)
-        every { dao.getPost(2) } returns Post(2, "user2", "text2", date, null)
-        every { dao.top() } returns listOf(1)
+    fun testHomeWithSomePosts() = testApp {
+        every { dao.getPost(1) } returns Post(1, "user1", date, "title1", "text1","image1")
+        every { dao.getPost(2) } returns Post(2, "user2", date, "title2","text2","image2")
         every { dao.latest() } returns listOf(2)
 
         handleRequest(HttpMethod.Get, "/").apply {
             assertEquals(200, response.status()?.value)
-            assertFalse(response.content!!.contains("There are no kweets yet"))
-            assertTrue(response.content!!.contains("user1"))
-            assertTrue(response.content!!.contains("user2"))
+            assertFalse(response.content!!.contains("There are no posts yet"))
+            assertTrue(response.content!!.contains("text2"))
         }
 
-        verify(exactly = 2) { dao.getPost(any()) }
-        verify(exactly = 1) { dao.top() }
         verify(exactly = 1) { dao.latest() }
     }
 
@@ -96,7 +95,7 @@ class PostApplicationTestLegacy {
         val passwordHash = hash(password)
         val sessionCookieName = "SESSION"
         lateinit var sessionCookie: Cookie
-        every { dao.user("test1", passwordHash) } returns User("test1", "test1@test.com", "test1", passwordHash)
+        every { dao.user("test1", passwordHash) } returns User("test1", "test1@test.com", "test1", "test1", passwordHash)
 
         handleRequest(HttpMethod.Post, "/login") {
             addHeader(HttpHeaders.ContentType, ContentType.Application.FormUrlEncoded.toString())

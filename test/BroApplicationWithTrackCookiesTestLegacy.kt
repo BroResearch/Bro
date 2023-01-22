@@ -5,21 +5,23 @@ import io.mockk.*
 import model.User
 import org.joda.time.*
 import org.junit.Test
+import plugin.hash
+import plugin.mainWithDependencies
 import kotlin.test.*
 
-class PostApplicationWithTrackCookiesTestLegacy {
-    val dao = mockk<DAOFacade>(relaxed = true)
-    val date = DateTime.parse("2010-01-01T00:00+00:00")
+class BroApplicationWithTrackCookiesTestLegacy {
+    private val dao: DAOFacade = mockk(relaxed = true)
+    private val date: DateTime = DateTime.parse("2010-01-01T00:00+00:00")
 
     /**
-     * This test is analogous to [PostApplicationTestLegacy.testLoginSuccess] but uses the [cookiesSession] method
+     * This test is analogous to [BroApplicationTestLegacy.testLoginSuccess] but uses the [cookiesSession] method
      * to simplify the cookie tracking in several requests.
      */
     @Test
     fun testLoginSuccessWithTracker() = testApp {
         val password = "mylongpassword"
         val passwordHash = hash(password)
-        every { dao.user("test1", passwordHash) } returns User("test1", "test1@test.com", "test1", passwordHash)
+        every { dao.user("test1", passwordHash) } returns User("test1", "test1@test.com", "test1", "test1", passwordHash)
 
         cookiesSession {
             handleRequest(HttpMethod.Post, "/login") {
@@ -38,7 +40,7 @@ class PostApplicationWithTrackCookiesTestLegacy {
     }
 
     private fun testApp(callback: TestApplicationEngine.() -> Unit) {
-        withTestApplication({ mainWithDependencies(dao) }) { callback() }
+        withTestApplication(moduleFunction = { mainWithDependencies(dao) }) { callback() }
     }
 }
 
