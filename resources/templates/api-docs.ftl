@@ -167,7 +167,7 @@
                           <span>     </span><span class="text-currentLine">// ...</span>
                         <span>  </span><span>}</span>
                         <span><span>[</span></span>
-                      </code>></pre>
+                      </code></pre>
                                 </div>
                             </div>
                         </div>
