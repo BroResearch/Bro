@@ -15,7 +15,9 @@ import plugin.BroSession
 @Serializable
 @Resource("/team")
 class TeamPage
-
+/**
+ * Register the [TeamPage] route '/team'.
+ */
 fun Route.teamPage(dao: DAOFacade) {
     get<TeamPage> {
         // Tries to get the user from the session (null if failure)

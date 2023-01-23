@@ -17,13 +17,12 @@ import java.io.*
 interface DAOFacade : Closeable {
     /**
      * Initializes all the required data.
-     * In this case, this should initialize the Users and Posts tables.
      */
     fun init()
 
     /**
-     * Creates a Post from a specific [user] name, the Post [text] content
-     * and a [date] that would default to the current time.
+     * Creates a Post from a specific [user] name, the [title], the [image], the [text] content,
+     * and the [date] that would default to the current time.
      */
     fun createPost(user: String,title: String, text: String, image: String, date: DateTime = DateTime.now()): Int
 
@@ -82,8 +81,7 @@ interface DAOFacade : Closeable {
 
 /**
  * Database implementation of the facade.
- * Uses Exposed, and either an in-memory H2 database or a file-based H2 database by default.
- * But it can be configured.
+ * Uses Exposed, and either an in-memory H2 database.
  */
 class DAOFacadeDatabase(
     private val db: Database = Database.connect("jdbc:h2:mem:test", driver = "org.h2.Driver")

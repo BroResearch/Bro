@@ -33,16 +33,10 @@ fun Application.mainWithDependencies(dao: DAOFacade) {
     // They are typed, can be constructed to generate URLs, and can be used to register routes.
     install(Resources)
     // Adds support to generate templated responses using FreeMarker.
-    // We configure it specifying the path inside the resources to use to get the template files.
-    // You can use <!-- @ftlvariable --> to annotate types inside the templates
-    // in a way that works with IntelliJ IDEA Ultimate.
-    // You can check the `resources/templates/*.ftl` files for reference.
     install(FreeMarker) {
         templateLoader = ClassTemplateLoader(this::class.java.classLoader, "templates")
     }
     // Configure the session to be represented by a [BroSession],
-    // using the SESSION cookie to store it, and transforming it to be authenticated with the [hashKey].
-    // it is sent in a plain text, but since it is authenticated can't be modified without knowing the secret [hashKey].
     install(Sessions) {
         cookie<BroSession>("SESSION") {
             transform(SessionTransportTransformerMessageAuthentication(hashKey))
@@ -60,20 +54,18 @@ fun Application.mainWithDependencies(dao: DAOFacade) {
     val hashFunction = { s: String -> hash(s) }
 
     // Register all the routes available to the application.
-    // They are split in several methods and files, so it can scale for larger
-    // applications keeping a reasonable number of lines per file.
     routing {
-        postsRouting(dao)
-        usersRouting(dao)
+        uploads()
         scripts()
         styles()
-        uploads()
+        postsRouting(dao)
+        usersRouting(dao)
         apiDocsPage(dao)
         teamPage(dao)
         index(dao)
+        userPage(dao)
         postNew(dao, hashFunction)
         delete(dao, hashFunction)
-        userPage(dao)
         viewPost(dao, hashFunction)
         editUser(dao, hashFunction)
         login(dao, hashFunction)

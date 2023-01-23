@@ -17,7 +17,9 @@ import kotlin.text.get
 @Serializable
 @Resource("/docs/api")
 class ApiDocsPage
-
+/**
+ * Register the [ApiDocsPage] route '/docs/api'.
+ */
 fun Route.apiDocsPage(dao: DAOFacade) {
     get<ApiDocsPage> {
         // Tries to get the user from the session (null if failure)

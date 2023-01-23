@@ -16,7 +16,9 @@ class PostsRoutes{
     @Resource("{id}")
     class Id(val parent: PostsRoutes = PostsRoutes(),val id: Int)
 }
-
+/**
+ * Registers the [PostsRoutes] route for th REST Api.
+ */
 
 fun Route.postsRouting(dao: DAOFacade) {
     get<PostsRoutes> {

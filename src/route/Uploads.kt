@@ -19,7 +19,7 @@ class Uploads
  */
 fun Route.uploads() {
     /**
-     * On a GET request to the [Uploads] route, it returns the `file` file from the resources.
+     * On a GET request to the [Uploads] route, it returns the `upload` file from the resources.
      */
     get<Uploads> {
         val imageName = call.parameters["imageName"]

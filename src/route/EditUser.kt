@@ -22,9 +22,12 @@ import java.io.File
 @Serializable
 @Resource("/user/{user}/edit")
 data class EditUser(val user: String)
-
+/**
+ * Register routes for user registration in the [EditUser] route (/user/{user}/edit)
+ */
 fun Route.editUser(dao: DAOFacade, hashFunction: (String) -> String) {
     get<EditUser> {
+        // get current session data if any
         val user = call.sessions.get<BroSession>()?.let { dao.user(it.userId) }
         val pageUser = dao.user(it.user)
 
@@ -77,7 +80,7 @@ fun Route.editUser(dao: DAOFacade, hashFunction: (String) -> String) {
             }
             part.dispose()
         }
-
+        // Verifies that the post user matches the session user and that the code and the date match, to prevent CSFR.
         if (user == null || !call.verifyCode(date, user, code, hashFunction)) {
             call.redirect(UserPage(it.user))
         } else {

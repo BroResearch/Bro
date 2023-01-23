@@ -14,7 +14,7 @@ import kotlinx.serialization.Serializable
 class MainJs
 
 /**
- * Register the styles, [MainJs] route (/styles/main.css) ????
+ * Register the styles, [MainJs] route (/scripts/main.js)
  */
 fun Route.scripts() {
     /**

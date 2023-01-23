@@ -16,7 +16,9 @@ class UsersRoutes{
     @Resource("{user}")
     class Id(val parent: UsersRoutes = UsersRoutes(), val user: String)
 }
-
+/**
+ * Registers the [UsersRoutes] route for th REST Api.
+ */
 fun Route.usersRouting(dao: DAOFacade) {
     get<UsersRoutes> {
         val users = dao.allUsers()

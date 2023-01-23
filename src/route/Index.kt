@@ -27,7 +27,6 @@ fun Route.index(dao: DAOFacade) {
         val user = call.sessions.get<BroSession>()?.let { dao.user(it.userId) }
 
         // Obtains several lists of posts using different sorting and filters.
-//        val top = dao.top(10).map { dao.getPost(it) }
         val posts: List<Pair<Post,User?>> = dao.latest(10).map { dao.getPost(it) }
             // Pair each post to the user's profile picture
             .map { Pair(it,dao.user(it.userId)) }
