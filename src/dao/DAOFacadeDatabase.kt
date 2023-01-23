@@ -161,32 +161,10 @@ class DAOFacadeDatabase(
     }
 
     override fun latest(count: Int): List<Int> = transaction(db) {
-        var attempt = 0
-        var allCount: Int? = null
-
-        for (minutes in generateSequence(2) { it * it }) {
-            attempt++
-
-            val dt = DateTime.now().minusMinutes(minutes)
-
-            val all = Posts.slice(Posts.id)
-                .select { Posts.date.greater(dt) }
+        Posts.selectAll()
                 .orderBy(Posts.date, SortOrder.DESC)
                 .limit(count)
                 .map { it[Posts.id] }
-
-            if (all.size >= count) {
-                return@transaction all
-            }
-            if (attempt > 10 && allCount == null) {
-                allCount = Posts.slice(Posts.id.count()).selectAll().count().toInt()
-                if (allCount <= count) {
-                    return@transaction Posts.slice(Posts.id).selectAll().map { it[Posts.id] }
-                }
-            }
-        }
-
-        emptyList()
     }
 
     override fun editUser(user: String, email: String, displayName: String, profilePic: String): Boolean = transaction(db) {
