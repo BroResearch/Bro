@@ -98,7 +98,9 @@ class DAOFacadeDatabase(
         // Create the used tables
         transaction(db) {
             SchemaUtils.create(Users, Posts)
-
+        }
+        if (user("admin") == null){
+            createUser(User("admin","admin@bro.com","Admin","", hash("administrator")))
         }
     }
 
@@ -159,6 +161,7 @@ class DAOFacadeDatabase(
             it[profilePic] = user.profilePic
             it[passwordHash] = user.passwordHash
         }
+        println(hash("admin"))
         Unit
     }
 

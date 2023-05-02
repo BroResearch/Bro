@@ -22,7 +22,9 @@ import javax.crypto.spec.SecretKeySpec
 /**
  * Represents a session in this site containing the user ID.
  */
-data class BroSession(val userId: String, val isAdmin: Boolean = false)
+data class BroSession(val userId: String){
+    val isAdmin get() = userId == "admin"
+}
 
 
 /**

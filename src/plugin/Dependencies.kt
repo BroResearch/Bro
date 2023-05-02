@@ -4,7 +4,6 @@ import dao.DAOFacade
 import freemarker.cache.ClassTemplateLoader
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
-import io.ktor.server.auth.*
 import io.ktor.server.freemarker.*
 import io.ktor.server.plugins.callloging.*
 import io.ktor.server.plugins.conditionalheaders.*
@@ -41,19 +40,6 @@ fun Application.mainWithDependencies(dao: DAOFacade) {
     install(Sessions) {
         cookie<BroSession>("SESSION") {
             transform(SessionTransportTransformerMessageAuthentication(hashKey))
-        }
-    }
-
-    install(Authentication) {
-        basic("admin") {
-            realm = "Access to the '/' path"
-            validate { credentials ->
-                if (credentials.name == "admin" && credentials.password == "admin") {
-                    UserIdPrincipal(credentials.name)
-                } else {
-                    null
-                }
-            }
         }
     }
 

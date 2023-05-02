@@ -11,5 +11,4 @@ object Users : Table() {
     val displayName = varchar("display_name", 256)
     val profilePic = varchar("profile_picture", 1024)
     val passwordHash = varchar("password_hash", 64)
-    val isAdmin = bool("is_admin").default(false) // new column
 }

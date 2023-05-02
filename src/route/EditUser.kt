@@ -8,15 +8,12 @@ import io.ktor.server.application.*
 import io.ktor.server.freemarker.*
 import io.ktor.server.request.*
 import io.ktor.server.resources.*
+import io.ktor.server.resources.post
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.server.routing.post
 import io.ktor.server.sessions.*
 import kotlinx.serialization.Serializable
-import plugin.BroSession
-import plugin.redirect
-import plugin.securityCode
-import plugin.verifyCode
+import plugin.*
 import java.io.File
 
 @Serializable
@@ -46,47 +43,50 @@ fun Route.editUser(dao: DAOFacade, hashFunction: (String) -> String) {
         }
     }
     post<EditUser> { it ->
+        try {
+            val user = call.sessions.get<BroSession>()?.let { dao.user(it.userId) }
 
-        val user = call.sessions.get<BroSession>()?.let { dao.user(it.userId) }
+            var date: Long = 0
+            var code: String = ""
 
-        var date: Long = 0
-        var code: String = ""
+            var email: String = ""
+            var displayName: String = ""
+            var profilePic: String = ""
 
-        var email: String = ""
-        var displayName: String = ""
-        var profilePic: String = ""
+            var fileBytes: ByteArray = byteArrayOf()
 
-        var fileBytes: ByteArray = byteArrayOf()
+            val multipartData = call.receiveMultipart()
 
-        val multipartData = call.receiveMultipart()
-
-        multipartData.forEachPart { part ->
-            when (part) {
-                is PartData.FormItem -> {
-                    when (part.name){
-                        "date" -> date = part.value.toLong()
-                        "code" -> code = part.value
-                        "email" -> email = part.value
-                        "display-name" -> displayName = part.value
+            multipartData.forEachPart { part ->
+                when (part) {
+                    is PartData.FormItem -> {
+                        when (part.name){
+                            "date" -> date = part.value.toLong()
+                            "code" -> code = part.value
+                            "email" -> email = part.value
+                            "display-name" -> displayName = part.value
+                        }
                     }
-                }
 
-                is PartData.FileItem -> {
-                    profilePic = part.originalFileName as String
-                    fileBytes = part.streamProvider().readBytes()
-                }
+                    is PartData.FileItem -> {
+                        profilePic = part.originalFileName as String
+                        fileBytes = part.streamProvider().readBytes()
+                        File("uploads/$profilePic").writeBytes(fileBytes)
+                    }
 
-                else -> {}
+                    else -> {}
+                }
+                part.dispose()
             }
-            part.dispose()
-        }
-        // Verifies that the post user matches the session user and that the code and the date match, to prevent CSFR.
-        if (user == null || !call.verifyCode(date, user, code, hashFunction)) {
-            call.redirect(UserPage(it.user))
-        } else {
-            File("uploads/$profilePic").writeBytes(fileBytes)
-            dao.editUser(it.user,email,displayName,profilePic)
-            call.redirect(UserPage(it.user))
+            // Verifies that the post user matches the session user and that the code and the date match, to prevent CSFR.
+            if (user == null || !call.verifyCode(date, user, code, hashFunction)) {
+                call.redirect(UserPage(it.user))
+            } else {
+                dao.editUser(it.user,email,displayName,profilePic)
+                call.redirect(UserPage(it.user))
+            }
+        } catch (e: Exception) {
+            call.respond(HttpStatusCode.InternalServerError, e.message.toString())
         }
     }
 
