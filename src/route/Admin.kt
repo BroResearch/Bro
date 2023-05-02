@@ -13,6 +13,7 @@ import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import kotlinx.serialization.Serializable
 import plugin.BroSession
+import plugin.isAdmin
 
 
 /**
@@ -29,19 +30,18 @@ fun Route.admin(dao: DAOFacade) {
      * Only admin users should have access to this page.
      */
     get<Admin> {
-        val session = call.sessions.get<BroSession>()
-        val isAdmin = session?.isAdmin == true
-        if (!isAdmin) {
+        val user = call.sessions.get<BroSession>()?.let { dao.user(it.userId) }
+        if (user?.isAdmin() == false) {
             call.respond(HttpStatusCode.Forbidden)
         } else {
             val users = dao.allUsers().filter {
-                it.userId != session?.userId
+                it.userId != user?.userId
             }
 
             call.respond(
                 FreeMarkerContent(
                     "admin.ftl",
-                    mapOf("users" to users)
+                    mapOf("user" to user, "users" to users)
                 )
             )
         }
@@ -51,8 +51,8 @@ fun Route.admin(dao: DAOFacade) {
          * A POST request to the [Admin] page should delete the user.
          */
     post<Admin> {
-        val isAdmin = call.sessions.get<BroSession>()?.isAdmin == true
-        if (!isAdmin) {
+        val user = call.sessions.get<BroSession>()?.let { dao.user(it.userId) }
+        if (user?.isAdmin() == false) {
             call.respond(HttpStatusCode.Forbidden)
         } else {
             val post = call.receive<Parameters>()

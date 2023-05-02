@@ -13,6 +13,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import kotlinx.serialization.Serializable
+import plugin.isAdmin
 import plugin.redirect
 import plugin.userNameValid
 
@@ -63,9 +64,8 @@ fun Route.login(dao: DAOFacade, hash: (String) -> String) {
         if (login == null) {
             call.redirect(error.copy(error = "Invalid username or password"))
         } else {
-            val session = BroSession(login.userId)
-            call.sessions.set(session)
-            if (session.isAdmin) {
+            call.sessions.set(BroSession(login.userId))
+            if (login.isAdmin()) {
                 call.redirect(Admin())
             } else {
                 call.redirect(UserPage(login.userId))

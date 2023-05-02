@@ -100,7 +100,7 @@ class DAOFacadeDatabase(
             SchemaUtils.create(Users, Posts)
         }
         if (user("admin") == null){
-            createUser(User("admin","admin@bro.com","Admin","", hash("administrator")))
+            createUser(User("admin","admin@bro.com","Admin","defaultProfile.png", hash("administrator")))
         }
     }
 
