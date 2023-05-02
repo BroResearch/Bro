@@ -2,6 +2,7 @@ package dao
 
 import model.Post
 import model.User
+import plugin.hash
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.*
@@ -30,6 +31,12 @@ interface DAOFacade : Closeable {
      * Deletes a post from its [id].
      */
     fun deletePost(id: Int)
+
+    /**
+     * Deletes a post from its [userId].
+     */
+
+    fun deleteUser(userId: String)
 
     /**
      * Get the DAO object representation of a post based from its [id].
@@ -91,6 +98,7 @@ class DAOFacadeDatabase(
         // Create the used tables
         transaction(db) {
             SchemaUtils.create(Users, Posts)
+
         }
     }
 
@@ -107,6 +115,12 @@ class DAOFacadeDatabase(
     override fun deletePost(id: Int) {
         transaction(db) {
             Posts.deleteWhere { Posts.id.eq(id) }
+        }
+    }
+
+    override fun deleteUser(userId: String) {
+        transaction(db) {
+            Users.deleteWhere { Users.id.eq(userId) }
         }
     }
 

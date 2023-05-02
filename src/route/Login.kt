@@ -63,8 +63,13 @@ fun Route.login(dao: DAOFacade, hash: (String) -> String) {
         if (login == null) {
             call.redirect(error.copy(error = "Invalid username or password"))
         } else {
-            call.sessions.set(BroSession(login.userId))
-            call.redirect(UserPage(login.userId))
+            val session = BroSession(login.userId, login.isAdmin)
+            call.sessions.set(session)
+            if (login.isAdmin) {
+                call.redirect(Admin())
+            } else {
+                call.redirect(UserPage(login.userId))
+            }
         }
     }
 

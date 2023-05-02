@@ -49,6 +49,7 @@ val tcnative_classifier = when {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("io.ktor:ktor-server-auth")
     implementation("io.ktor:ktor-server-freemarker")
     implementation("io.ktor:ktor-server-resources")
     implementation("io.ktor:ktor-server-sessions")

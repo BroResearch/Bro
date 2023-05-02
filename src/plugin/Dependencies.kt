@@ -4,6 +4,7 @@ import dao.DAOFacade
 import freemarker.cache.ClassTemplateLoader
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.freemarker.*
 import io.ktor.server.plugins.callloging.*
 import io.ktor.server.plugins.conditionalheaders.*
@@ -43,6 +44,19 @@ fun Application.mainWithDependencies(dao: DAOFacade) {
         }
     }
 
+    install(Authentication) {
+        basic("admin") {
+            realm = "Access to the '/' path"
+            validate { credentials ->
+                if (credentials.name == "admin" && credentials.password == "admin") {
+                    UserIdPrincipal(credentials.name)
+                } else {
+                    null
+                }
+            }
+        }
+    }
+
     // provide a convenient mechanism for converting Kotlin objects into a serialized form like JSON,
     // and vice versa. We will use it to format our APIs output,
     // and to consume user input that is structured in JSON.
@@ -64,6 +78,7 @@ fun Application.mainWithDependencies(dao: DAOFacade) {
         teamPage(dao)
         index(dao)
         userPage(dao)
+        admin(dao)
         postNew(dao, hashFunction)
         delete(dao, hashFunction)
         viewPost(dao, hashFunction)

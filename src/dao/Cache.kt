@@ -15,6 +15,7 @@ import java.io.*
  * and perform several caching strategies for each domain operation.
  */
 class DAOFacadeCache(private val delegate: DAOFacade, private val storagePath: File) : DAOFacade {
+
     /**
      * Build a cache manager with a cache for posts and other for users.
      * It uses the specified [storagePath] for persistence.
@@ -71,6 +72,10 @@ class DAOFacadeCache(private val delegate: DAOFacade, private val storagePath: F
     override fun deletePost(id: Int) {
         delegate.deletePost(id)
         postsCache.remove(id)
+    }
+
+    override fun deleteUser(userId: String) {
+        delegate.deleteUser(userId)
     }
 
     override fun getPost(id: Int): Post {
