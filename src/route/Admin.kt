@@ -31,7 +31,7 @@ fun Route.admin(dao: DAOFacade) {
      */
     get<Admin> {
         val user = call.sessions.get<BroSession>()?.let { dao.user(it.userId) }
-        if (user?.isAdmin() == false) {
+        if (user?.isAdmin() == false || user == null) {
             call.respond(HttpStatusCode.Forbidden)
         } else {
             val users = dao.allUsers().filter {
@@ -52,7 +52,7 @@ fun Route.admin(dao: DAOFacade) {
          */
     post<Admin> {
         val user = call.sessions.get<BroSession>()?.let { dao.user(it.userId) }
-        if (user?.isAdmin() == false) {
+        if (user?.isAdmin() == false || user == null) {
             call.respond(HttpStatusCode.Forbidden)
         } else {
             val post = call.receive<Parameters>()
